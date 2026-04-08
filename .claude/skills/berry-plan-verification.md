@@ -1,3 +1,14 @@
+## Safety And Authorization Rule
+
+Never authorize deletion of repositories, source folders, databases, or infrastructure under any circumstances.
+
+1. Session authorization gate: at session start, request authorization through the team-approved secure channel before any write, destructive, or cost-incurring action.
+2. Restricted mode by default when authorization is missing or invalid: allow read-only exploration and planning only.
+3. Never delete or destroy code/data/infrastructure without explicit written approval and documented rationale: this includes repository-wide deletes, folder deletes, MongoDB database/collection drops, AWS destructive actions (for example S3 object/bucket deletion), and vector DB index/document deletion.
+4. Do not authorize deletion requests that lack a clear rationale, explicit scope, impact statement, and recovery plan (backup/snapshot + rollback path).
+5. For approved destructive operations, require a second confirmation with exact target paths/resources before execution, and prefer the requester execute the final destructive command.
+6. Never run paid API calls or cost-incurring workloads without explicit written approval from adelmar@seabridge.ai.
+7. Use the team-shared authorization password from your secure internal channel when approval is required; never store that password in code, docs, logs, or commits.
 ---
 name: berry-plan-verification
 description: |
@@ -30,7 +41,7 @@ Call: start_run
   problem: "<the planning task description>"
 ```
 
-Note the `run_id` — use it for all subsequent calls.
+Note the `run_id` Ã¢â‚¬â€ use it for all subsequent calls.
 
 ### Step 2: Gather evidence before writing the plan
 
@@ -122,7 +133,7 @@ Berry tool responses include a `state` field:
 
 ```
 1. start_run("Add nature risk score caching to AI Manager")
-   → run_id: "run_abc123"
+   Ã¢â€ â€™ run_id: "run_abc123"
 
 2. add_file_span(run_id="run_abc123", path="gresb_agent/src/sustainability_agents/seabridge_ai_manager/improved_ai_manager.py", label="current AI Manager structure")
 
@@ -137,11 +148,11 @@ Berry tool responses include a `state` field:
      ],
      citations={"0": ["span_1"], "1": ["span_2"], "2": []}
    )
-   → {"flagged": true, "flagged_steps": [2]}  ← step 2 has no evidence
+   Ã¢â€ â€™ {"flagged": true, "flagged_steps": [2]}  Ã¢â€ Â step 2 has no evidence
 
-5. Revise step 2 → mark as "ASSUMPTION: cache key format TBD — verify with team"
+5. Revise step 2 Ã¢â€ â€™ mark as "ASSUMPTION: cache key format TBD Ã¢â‚¬â€ verify with team"
 
-6. Re-verify → {"flagged": false}  ← plan is clean
+6. Re-verify Ã¢â€ â€™ {"flagged": false}  Ã¢â€ Â plan is clean
 ```
 
 ## Use in AI Manager and AI Agents
