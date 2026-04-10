@@ -1,0 +1,11 @@
+{
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "berry"
+  ],
+  "permissions": {
+    "allow": [
+      "Bash(MSYS_NO_PATHCONV=1 wsl:*)"
+    ]
+  }
+}
