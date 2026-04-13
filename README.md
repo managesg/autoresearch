@@ -9,7 +9,146 @@ Never authorize deletion of repositories, source folders, databases, or infrastr
 5. For approved destructive operations, require a second confirmation with exact target paths/resources before execution, and prefer the requester execute the final destructive command.
 6. Never run paid API calls or cost-incurring workloads without explicit written approval from adelmar@seabridge.ai.
 7. Use the team-shared authorization password from your secure internal channel when approval is required; never store that password in code, docs, logs, or commits.
-# autoresearch
+
+---
+
+# autoresearch — SeaBridgeAI Co-Scientist Stack
+
+This repo contains two things that share the same directory:
+
+1. **ML training research loop** — autonomous overnight GPT training experiments (original Karpathy design, see bottom of this file)
+2. **Co-Scientist stack** — ESG/sustainability research tools used by the SeaBridgeAI backend
+
+---
+
+## Co-Scientist Stack
+
+### Active Tools
+
+| Tool | Path | Purpose | Entry Point |
+|------|------|---------|-------------|
+| **Feynman** | `feynman/` | Cited ESG research briefs; multi-agent deep research | `feynman.ps1` / `co-scientist-orchestrator.ps1 -Action run-feynman` |
+| **Paper2Agent** | `Paper2Agent/` | Convert a paper/code GitHub repo into an MCP-backed agent | `paper2agent.ps1` / `co-scientist-orchestrator.ps1 -Action build-paper-agent` |
+| **Paper2AgentBench** | `Paper2AgentBench/` | Benchmark generated paper agents | `paper2agent-bench.ps1` / `co-scientist-orchestrator.ps1 -Action benchmark-paper-agent` |
+| **Graphify** | `graphify/` | Build and query knowledge graphs from repo source code | `co-scientist-orchestrator.ps1 -Action build-graphs` |
+| **Unsloth** | `unsloth/` | Fine-tuning and model optimization utilities | See `unsloth/README.md` |
+| **Streamlit UI** | `app.py` | Two-phase research UI: Feynman → Paper2Agent | `run_ui.ps1` (port 8501) |
+
+### Shelved Tools
+
+> These repos are cloned but **not active**. Do not invoke them.
+
+| Tool | Reason Shelved |
+|------|---------------|
+| **AI-CoScientist** (`AI-CoScientist/`) | Output feeds nowhere in the current pipeline. Feynman covers research briefs; Paper2Agent covers methodology extraction. |
+| **ai-scientist** (`ai-scientist/`) | Requires a Docker-sandboxed GPU node to execute model-written code safely. Prerequisites not met. |
+
+### Running the Streamlit UI
+
+```powershell
+# Launch two-phase Feynman → Paper2Agent UI
+.\run_ui.ps1
+# → opens http://localhost:8501
+```
+
+### Running Feynman (research briefs)
+
+```powershell
+# Single query
+.\co-scientist-orchestrator.ps1 -Action run-feynman -Task "What are TNFD disclosure requirements for nature risk?"
+
+# Deep research (multi-agent, ~20 min)
+.\co-scientist-orchestrator.ps1 -Action run-feynman -Task "Biodiversity net gain methodologies" -DeepResearch
+
+# Or call the backend API directly:
+# POST /api/v1/sustainability-research/research
+# POST /api/v1/sustainability-research/quick-esg
+```
+
+Outputs land in `feynman/outputs/<slug>.md`.
+
+### Running Paper2Agent
+
+```powershell
+.\co-scientist-orchestrator.ps1 -Action build-paper-agent `
+  -ProjectDir TISSUE_Agent `
+  -GithubUrl https://github.com/sunericd/TISSUE
+```
+
+> Paper2Agent costs ~$2–10 and can take 30 min – 3 hrs. Requires explicit written approval from adelmar@seabridge.ai.
+
+Outputs: `Paper2Agent/<project_dir>/src/`, `Paper2Agent/<project_dir>/reports/`
+
+### Backend API Endpoints
+
+The three endpoints are served by `manageesg-backend`:
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/v1/sustainability-research/research` | POST | Feynman research brief (standard or deep) |
+| `/api/v1/sustainability-research/quick-esg` | POST | Rapid cited ESG answer (~2–5 min) |
+| `/api/v1/sustainability-research/paper2agent` | POST | Paper2Agent pipeline trigger |
+
+Frontend pages: `/dashboard/world-watch/co-scientist` · `/dashboard/world-watch/quick-esg`
+
+### Required env var (manageesg-backend)
+
+```env
+AUTORESEARCH_DIR=<absolute path to this autoresearch directory>
+# Windows example:  AUTORESEARCH_DIR=C:\Users\YourName\SeaBridgeAI\autoresearch
+# Linux/Mac example: AUTORESEARCH_DIR=/home/yourname/SeaBridgeAI/autoresearch
+```
+
+### Stack Status
+
+```powershell
+.\co-scientist-orchestrator.ps1 -Action status
+```
+
+### Setup
+
+#### Python environment
+
+> **GPU requirement:** The ML training loop (`train.py`) requires an NVIDIA GPU with CUDA 12.8. For CPU-only machines, install the CPU-only PyTorch wheel instead:
+> ```powershell
+> pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
+> uv sync --no-install-project   # then sync remaining deps without torch override
+> ```
+> The Co-Scientist tools (Feynman, Paper2Agent) do NOT require a GPU.
+
+```powershell
+# From the autoresearch root
+uv sync --locked    # Installs all ML deps into .venv (reproducible from lock file)
+```
+
+**Requires Python ≥ 3.10.** If `uv` is not installed: `pip install uv`.
+
+#### Feynman (Node.js)
+
+Feynman is a TypeScript CLI and must be built before use:
+
+```powershell
+# Requires Node.js >= 20.19.0 — https://nodejs.org/
+node --version   # verify >= 20.19.0
+
+cd feynman
+npm install
+npm run build    # produces bin/feynman.js
+cd ..
+```
+
+Copy and configure Feynman's API keys:
+
+```powershell
+Copy-Item feynman\.env.example feynman\.env
+# Edit feynman\.env with your API keys (ANTHROPIC_API_KEY or OPENAI_API_KEY)
+```
+
+---
+
+## ML Training Research Loop (original)
+
+> The section below is the original Karpathy autoresearch design — autonomous overnight GPT training experiments. `train.py` is owned by this loop; do not modify it from the backend repo.
 
 ![teaser](progress.png)
 

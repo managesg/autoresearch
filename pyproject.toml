@@ -16,9 +16,22 @@ dependencies = [
     "torch==2.9.1",
 ]
 
+[project.optional-dependencies]
+ui = ["streamlit>=1.45.0"]
+# CPU-only PyTorch (no CUDA) — use on machines without NVIDIA GPU
+# Install with: pip install -e ".[cpu]"  or  uv sync --extra cpu
+cpu = [
+    "torch==2.9.1",
+]
+
+# ── PyTorch source selection ───────────────────────────────────────────────────
+# Default: CUDA 12.8 (GPU). For CPU-only machines, run:
+#   uv sync --extra cpu
+# or install manually:
+#   pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
 [tool.uv.sources]
 torch = [
-    { index = "pytorch-cu128" },
+    { index = "pytorch-cu128", marker = "sys_platform != 'cpu-only'" },
 ]
 
 [[tool.uv.index]]

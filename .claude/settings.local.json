@@ -1,11 +1,34 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(MSYS_NO_PATHCONV=1 wsl:*)",
+      "Bash(wsl -d Ubuntu -- bash -c ':*)",
+      "Bash(echo \"install started in background PID=$!\")",
+      "Bash(nvidia-smi)",
+      "Bash(cmd.exe /c \"nvidia-smi\")",
+      "Bash(cmd.exe:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(powershell:*)",
+      "Bash(wsl:*)",
+      "Bash(set MSYS_NO_PATHCONV=1)",
+      "Bash(grep -r \"NEXT_PUBLIC_API\" /c/Users/adelm/SeaBridgeAI/manageesg-frontend/.env*)",
+      "Bash(cat /c/Users/adelm/SeaBridgeAI/manageesg-backend/.env*)",
+      "Bash(xargs grep:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(xargs ls:*)",
+      "Bash(find /c/Users/adelm/SeaBridgeAI/manageesg-frontend/src -type f \\\\\\( -name \"*.tsx\" -o -name \"*.ts\" \\\\\\) -exec grep -l \"plan\" {} \\\\;)",
+      "Bash(python3 -c \"import sys; print\\('Python path check'\\)\")",
+      "Bash(rtk tsc:*)",
+      "Bash(ls node_modules/dompurify/dist/*.d.ts)",
+      "Bash(sed -n '24,36p' seabridge_ai/pyproject.toml)",
+      "Bash(sed -n '61,72p' seabridge_ai/pyproject.toml)",
+      "Bash(GIT_EDITOR=true git rebase --continue)",
+      "Bash(git push:*)"
+    ]
+  },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "berry"
-  ],
-  "permissions": {
-    "allow": [
-      "Bash(MSYS_NO_PATHCONV=1 wsl:*)"
-    ]
-  }
+  ]
 }
