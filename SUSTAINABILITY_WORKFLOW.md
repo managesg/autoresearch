@@ -29,9 +29,9 @@ See [AI_COSCIENTIST_STACK.md](AI_COSCIENTIST_STACK.md) for tool inventory and ar
 ```powershell
 .\sustainability_research.ps1 -Scenario A -Task "Your ESG research question"
 # Or directly:
-.\feynman.ps1 "Your ESG research question"
+.\feynman\feynman.ps1 "Your ESG research question"
 # Deep research mode (parallel sub-agents, ~20 min, higher cost):
-.\feynman.ps1 "Your ESG research question" --deep-research
+.\feynman\feynman.ps1 "Your ESG research question" --deep-research
 ```
 **Output**: `autoresearch/feynman/outputs/<slug>.md` with citations, `papers/<slug>.md` with paper summaries.
 
@@ -42,27 +42,19 @@ See [AI_COSCIENTIST_STACK.md](AI_COSCIENTIST_STACK.md) for tool inventory and ar
 Review the Feynman output and identify the most relevant methodology paper or repo. Then convert it to an interactive MCP-backed agent:
 
 ```powershell
-.\paper2agent.ps1 -ProjectDir <AgentDir> -GithubUrl <PaperRepoUrl>
+.\paper2agent-suite\Paper2Agent\paper2agent.ps1 -ProjectDir <AgentDir> -GithubUrl <PaperRepoUrl>
 # Example:
-.\paper2agent.ps1 -ProjectDir TNFD_Risk_Agent -GithubUrl https://github.com/example/tnfd-methodology
+.\paper2agent-suite\Paper2Agent\paper2agent.ps1 -ProjectDir TNFD_Risk_Agent -GithubUrl https://github.com/example/tnfd-methodology
 ```
 **Output**: `autoresearch/<AgentDir>/src/<repo>_mcp.py`, extracted tools, quality report.
 
 **Cost gate**: $2-10, 30 min - 3 hrs. Manual opt-in required.
 
-> **SHELVED STEPS (A2-old / A3-old):** The original Scenario A included two additional steps —
+> **REMOVED STEPS (A2-old / A3-old):** The original Scenario A included two additional steps —
 > AI-CoScientist (hypothesis evolution) and ai-scientist (autonomous experiment) — that have
-> been shelved. AI-CoScientist output fed nowhere in the active pipeline; ai-scientist requires
-> a Docker-sandboxed GPU node that is not yet provisioned. These steps are retained below for
-> reference only and must not be run without explicit approval and isolation setup.
->
-> ```powershell
-> # SHELVED: AI-CoScientist
-> # .\co-scientist-orchestrator.ps1 -Action run-coscientist -Task "Hypothesis: [your hypothesis]"
->
-> # SHELVED: ai-scientist (ISOLATION REQUIRED — never on production machines)
-> # .\co-scientist-orchestrator.ps1 -Action run-ai-scientist -Idea "[refined hypothesis]"
-> ```
+> been removed. AI-CoScientist is archived (`autoresearch/archived/AI-CoScientist/`); its output
+> fed nowhere in the active pipeline. ai-scientist (Sakana AI) has been deleted — it executed
+> model-written code and required a Docker-sandboxed GPU node. Do not attempt to invoke either tool.
 
 #### Step A3 — Handoff to Backend (Optional)
 If the experiment produces findings relevant to an existing backend agent:
@@ -82,9 +74,9 @@ If the experiment produces findings relevant to an existing backend agent:
 
 #### Step B1 — Research Current State (Feynman)
 ```powershell
-.\feynman.ps1 "Latest [framework/methodology] for [domain]"
+.\feynman\feynman.ps1 "Latest [framework/methodology] for [domain]"
 # Example:
-.\feynman.ps1 "TNFD Alpha framework biodiversity risk disclosure requirements 2024"
+.\feynman\feynman.ps1 "TNFD Alpha framework biodiversity risk disclosure requirements 2024"
 ```
 **Output**: Cited brief at `feynman/outputs/`.
 
@@ -99,7 +91,7 @@ cat seabridge_ai/docs/AI_agents.md
 #### Step B3 — Build Knowledge Graph (Graphify)
 ```powershell
 # In autoresearch/:
-powershell -ExecutionPolicy Bypass -File .\graphify.ps1 query "show the nature_agent architecture and data flow" --graph graphify-out/graph.json
+powershell -ExecutionPolicy Bypass -File .\graphify.ps1 query "show the nature_agent architecture and data flow" --graph graphify/output/graph.json
 ```
 
 #### Step B4 — ML Experiment Loop (autoresearch)
@@ -107,8 +99,8 @@ If the improvement can be framed as a training experiment:
 ```bash
 # In autoresearch/ repo:
 git checkout -b autoresearch/<tag>
-# Edit train.py per the research question
-uv run train.py > run.log 2>&1
+# Edit experiments/train.py per the research question
+uv run experiments/train.py > run.log 2>&1
 grep "^val_bpb:\|^peak_vram_mb:" run.log
 # Record in results.tsv, iterate
 ```
@@ -116,7 +108,7 @@ grep "^val_bpb:\|^peak_vram_mb:" run.log
 #### Step B5 — Paper-to-Agent (Paper2Agent, Optional)
 If a specific paper should be converted to an MCP tool:
 ```powershell
-.\paper2agent.ps1 -ProjectDir <AgentDir> -GithubUrl <PaperRepoUrl>
+.\paper2agent-suite\Paper2Agent\paper2agent.ps1 -ProjectDir <AgentDir> -GithubUrl <PaperRepoUrl>
 ```
 
 #### Step B6 — Implement in Backend
@@ -137,7 +129,7 @@ If a specific paper should be converted to an MCP tool:
 
 #### Step C1 — Cited Brief (Feynman)
 ```powershell
-.\feynman.ps1 "Your ESG data question"
+.\feynman\feynman.ps1 "Your ESG data question"
 ```
 **Output**: `feynman/outputs/<slug>.md` — cited, structured answer within ~2-5 minutes.
 
@@ -160,14 +152,14 @@ If the finding should update the AI Manager's knowledge base:
 ESG question or task
 │
 ├─ Need literature + citations?
-│   └─ YES → Feynman (.\feynman.ps1 "question")
+│   └─ YES → Feynman (.\feynman\feynman.ps1 "question")
 │       └─ Need to convert a key paper into an MCP agent?
-│           └─ YES → Paper2Agent (.\paper2agent.ps1 -ProjectDir X -GithubUrl Y)
+│           └─ YES → Paper2Agent (.\paper2agent-suite\Paper2Agent\paper2agent.ps1 -ProjectDir X -GithubUrl Y)
 │               └─ Benchmark it? → Paper2AgentBench (.\paper2agent-bench.ps1)
 │
-│       [SHELVED — not reachable in current pipeline]
-│       └─ AI-CoScientist (hypothesis evolution) — shelved, output unconnected
-│           └─ ai-scientist (autonomous experiment) — shelved, requires GPU sandbox
+|       [REMOVED -- not reachable in current pipeline]
+|       +- AI-CoScientist (hypothesis evolution) -- archived, output unconnected
+|           +- ai-scientist (autonomous experiment) -- deleted
 │
 ├─ Improve existing backend agent?
 │   └─ YES → Scenario B
@@ -191,8 +183,8 @@ ESG question or task
 |------|-----------|------|
 | Feynman (standard) | Low (~$0.05-0.50) | Auto-allowed with API key |
 | Feynman (deep-research) | Medium (~$1-5) | Confirm before running |
-| AI-CoScientist | High (~$5-20) | **SHELVED** — do not invoke |
-| ai-scientist | High + isolation required | **SHELVED** — requires GPU sandbox |
+| AI-CoScientist | High (~$5-20) | **ARCHIVED** -- do not invoke |
+| ai-scientist | High + isolation required | **DELETED** -- do not invoke |
 | Paper2Agent | High (30 min - 3hr) | Manual opt-in only |
 | Unsloth | GPU only (local cost) | No API cost; confirm GPU availability |
 
@@ -206,8 +198,8 @@ ESG question or task
 |------|----------------|
 | Feynman | `autoresearch/feynman/outputs/<slug>.md` |
 | Feynman papers | `autoresearch/feynman/papers/<slug>.md` |
-| AI-CoScientist | `autoresearch/AI-CoScientist/` output dirs _(SHELVED)_ |
-| ai-scientist | `autoresearch/ai-scientist/` output dirs _(SHELVED)_ |
+| AI-CoScientist | `autoresearch/archived/AI-CoScientist/` _(ARCHIVED)_ |
+| ai-scientist | (deleted) |
 | Paper2Agent | `autoresearch/<ProjectDir>/` |
 | autoresearch loop | `autoresearch/results.tsv`, `autoresearch/run.log` |
 | Backend handoff | `manageesg-backend/autoresearch/handoff/` |
@@ -216,7 +208,7 @@ ESG question or task
 
 ## Common Pitfalls
 
-1. **Invoking ai-scientist or AI-CoScientist** — both are shelved. ai-scientist executes model-written code and requires a Docker-sandboxed GPU node that is not provisioned. Do not run either tool.
+1. **Invoking AI-CoScientist or ai-scientist** -- AI-CoScientist is archived; ai-scientist is deleted. Do not attempt to invoke either tool.
 2. **Skipping feynman setup** — run `feynman setup` interactively once before use (configures Pi runtime).
 3. **Committing results.tsv** — it's in `.gitignore` for a reason; contains run-specific artifacts.
 4. **Merging autoresearch into manageesg-backend** — they must stay separate; use the adapter in `ai_agents/autoresearch/`.

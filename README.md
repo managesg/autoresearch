@@ -34,14 +34,12 @@ This repo contains two things that share the same directory:
 | **Unsloth** | `unsloth/` | Fine-tuning and model optimization utilities | See `unsloth/README.md` |
 | **Streamlit UI** | `app.py` | Two-phase research UI: Feynman → Paper2Agent | `run_ui.ps1` (port 8501) |
 
-### Shelved Tools
+### Archived / Deleted Tools
 
-> These repos are cloned but **not active**. Do not invoke them.
-
-| Tool | Reason Shelved |
-|------|---------------|
-| **AI-CoScientist** (`AI-CoScientist/`) | Output feeds nowhere in the current pipeline. Feynman covers research briefs; Paper2Agent covers methodology extraction. |
-| **ai-scientist** (`ai-scientist/`) | Requires a Docker-sandboxed GPU node to execute model-written code safely. Prerequisites not met. |
+| Tool | Status | Location |
+|------|--------|---------|
+| **AI-CoScientist** | Archived — output fed nowhere in the current pipeline; Feynman covers research briefs; Paper2Agent covers methodology extraction. | `archived/AI-CoScientist/` |
+| **ai-scientist** (Sakana AI) | Deleted — executed model-written code; required a Docker-sandboxed GPU node that was never provisioned. | (removed) |
 
 ### Running the Streamlit UI
 

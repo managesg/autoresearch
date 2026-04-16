@@ -26,12 +26,10 @@ through autonomous experimentation, paper extraction, and academic benchmarking.
 │   │    Graph)    │   └──────────────────────────────────────────────┘  │
 │   └──────────────┘                                                      │
 │                                                                         │
-│  SHELVED (prerequisites unmet / not wired into any active pipeline)     │
-│   ┌──────────────┐   ┌──────────────────────────────────────────────┐  │
-│   │ AI-CoScienti │   │         ai-scientist (Sakana AI)              │  │
-│   │     st       │   │   (requires Docker sandbox + GPU node)        │  │
-│   │  (Shelved)   │   │               (Shelved)                       │  │
-│   └──────────────┘   └──────────────────────────────────────────────┘  │
+│  ARCHIVED / DELETED (not wired into any active pipeline)                │
+│   ┌──────────────────────────────────────────────────────────────────┐  │
+│   │  AI-CoScientist (Archived at autoresearch/archived/AI-CoScientist/) │  │
+│   └──────────────────────────────────────────────────────────────────┘  │
 │                                                                         │
 │   ┌─────────────────────────────────────────────────────────────────┐   │
 │   │   manageesg-backend  /  sustainability_ai  (Production Layer)   │   │
@@ -149,7 +147,7 @@ feynman setup
 feynman doctor
 ```
 
-**PowerShell wrapper:** `C:\Users\adelm\SeaBridgeAI\autoresearch\feynman.ps1`
+**PowerShell wrapper:** `C:\Users\adelm\SeaBridgeAI\autoresearch\feynman\feynman.ps1`
 
 **Skills installed (19 skill directories):**
 
@@ -205,118 +203,24 @@ feynman doctor
 
 ---
 
-### 2. AI-CoScientist — Multi-Agent Hypothesis Evolution
+### 2. AI-CoScientist — Archived
 
-> **STATUS: SHELVED** — AI-CoScientist output feeds nowhere automatically in the current
-> pipeline. Feynman covers the research brief step; Paper2Agent covers the methodology
-> extraction step. Re-evaluate if a structured hypothesis-ranking step becomes needed.
+> **STATUS: ARCHIVED** — Output feeds nowhere automatically in the current pipeline. Feynman
+> covers the research brief step; Paper2Agent covers the methodology extraction step.
+> Archived at `autoresearch/archived/AI-CoScientist/`. Re-evaluate if a structured
+> hypothesis-ranking step becomes needed.
 
-**What it does:** Multi-agent framework implementing the "Towards an AI Co-Scientist"
-methodology. Generates research hypotheses, runs peer review, tournament-based Elo
-ranking, and iteratively evolves the best ideas.
-
-**Installed at:** `C:\Users\adelm\SeaBridgeAI\autoresearch\AI-CoScientist\`
-
-**Source:** [The Swarm Corporation / AI-CoScientist](https://github.com/The-Swarm-Corporation/AI-CoScientist)
-
-**Six specialized agents:**
-
-| Agent | Role |
-|-------|------|
-| Generation Agent | Creates initial hypotheses from the research goal |
-| Reflection Agent | Peer reviews each hypothesis for scientific merit |
-| Ranking Agent | Orders hypotheses by review scores |
-| Tournament Agent | Pairwise Elo comparisons |
-| Meta-Review Agent | Synthesizes insights across all reviews |
-| Evolution Agent | Refines top hypotheses based on feedback |
-
-**Workflow:**
-
-```
-Research Goal → Generation → Reflection → Ranking → Tournament → Meta-Review → Evolution
-                                                                      ↑              │
-                                                                      └──────────────┘
-                                                                      (iterates N rounds)
-```
-
-**Quick start (Python):**
-
-```python
-from ai_coscientist import AIScientistFramework
-
-ai = AIScientistFramework(
-    model_name="gemini/gemini-2.0-flash",
-    max_iterations=3,
-    hypotheses_per_generation=10,
-    tournament_size=8,
-    evolution_top_k=3,
-)
-
-results = ai.run_research_workflow(
-    "Identify ESG risk factors in climate transition scenarios"
-)
-
-for h in results["top_ranked_hypotheses"]:
-    print(h["text"], "— Elo:", h["elo_rating"])
-```
-
-**Run via orchestrator:**
-
-```powershell
-# Check readiness
-.\co-scientist-orchestrator.ps1 -Action status
-
-# Dry-run
-.\co-scientist-orchestrator.ps1 -Action run-coscientist -Task "ESG risk factors in climate transition" -DryRun
-
-# Execute (manual opt-in — incurs API cost)
-.\co-scientist-orchestrator.ps1 -Action run-coscientist -Task "ESG risk factors in climate transition"
-```
-
+**Source:** [The Swarm Corporation / AI-CoScientist](https://github.com/The-Swarm-Corporation/AI-CoScientist)  
 **Cost/safety:** Manual opt-in only. Requires explicit approval from adelmar@seabridge.ai.
-Do not auto-run via hooks.
 
 ---
 
-### 3. AI-Scientist — Autonomous Experiment Generation
-
-> **STATUS: SHELVED** — Requires a Docker-sandboxed GPU node to run safely (model-written
-> code is executed). Prerequisites have not been met. Re-evaluate when a dedicated
-> isolated compute node is provisioned.
-
-**What it does:** Sakana AI framework that autonomously generates novel research ideas,
-writes experiment code, executes experiments, and produces paper-style LaTeX write-ups
-with review scores.
-
-**Installed at:** `C:\Users\adelm\SeaBridgeAI\autoresearch\ai-scientist\`
-
-**Source:** [sakanaai/ai-scientist](https://github.com/sakanaai/ai-scientist)
-
-**Workflow:** Idea generation → Code writing → Experiment execution → Paper write-up → Peer review scoring
-
-**Run via orchestrator:**
-
-```powershell
-# Dry-run (always prints ISOLATION WARNING)
-.\co-scientist-orchestrator.ps1 -Action run-ai-scientist -DryRun
-
-# Execute with seed idea (ISOLATION REQUIRED)
-.\co-scientist-orchestrator.ps1 -Action run-ai-scientist -Idea "Novel ESG metric combining physical risk and regulatory exposure"
-```
-
-**Output:** Experiment code, results, LaTeX paper drafts, and review scores under `ai-scientist/` output directories.
-
-**Safety — ISOLATION REQUIRED:** This framework executes model-written code. Never run
-on a production machine or shared infrastructure. Manual opt-in only.
-
----
-
-### 4. Paper2Agent — Research Paper → MCP Agent
+### 3. Paper2Agent — Research Paper → MCP Agent
 
 **What it does:** Converts a research paper's GitHub repository into an interactive
 MCP-backed agent with extracted tools, test coverage, and a quality report.
 
-**Installed at:** `C:\Users\adelm\SeaBridgeAI\autoresearch\Paper2Agent\`
+**Installed at:** `C:\Users\adelm\SeaBridgeAI\autoresearch\paper2agent-suite\Paper2Agent\`
 
 **Outputs per run:**
 - MCP server: `<project_dir>/src/<repo_name>_mcp.py`
@@ -329,13 +233,13 @@ MCP-backed agent with extracted tools, test coverage, and a quality report.
 cd C:\Users\adelm\SeaBridgeAI\autoresearch
 
 # Basic
-.\Paper2Agent\Paper2Agent.sh --project_dir TISSUE_Agent --github_url https://github.com/sunericd/TISSUE
+.\paper2agent-suite\Paper2Agent\Paper2Agent.sh --project_dir TISSUE_Agent --github_url https://github.com/sunericd/TISSUE
 
 # With tutorial filter
-.\Paper2Agent\Paper2Agent.sh --project_dir Scanpy_Agent --github_url https://github.com/scverse/scanpy --tutorials "Preprocessing and clustering"
+.\paper2agent-suite\Paper2Agent\Paper2Agent.sh --project_dir Scanpy_Agent --github_url https://github.com/scverse/scanpy --tutorials "Preprocessing and clustering"
 
 # With benchmark
-.\Paper2Agent\Paper2Agent.sh --project_dir MyAgent --github_url <url> --benchmark
+.\paper2agent-suite\Paper2Agent\Paper2Agent.sh --project_dir MyAgent --github_url <url> --benchmark
 ```
 
 **Cost/safety:** Manual opt-in only. Takes 30 minutes to 3+ hours per paper. Incurs API cost.
@@ -347,15 +251,15 @@ cd C:\Users\adelm\SeaBridgeAI\autoresearch
 **What it does:** Evaluates Paper2Agent output quality using official benchmark datasets
 and scripts (labels, grading, analysis).
 
-**Installed at:** `C:\Users\adelm\SeaBridgeAI\autoresearch\Paper2AgentBench\`
+**Installed at:** `C:\Users\adelm\SeaBridgeAI\autoresearch\paper2agent-suite\Paper2AgentBench\`
 
 **Run:**
 
 ```powershell
-.\paper2agent-bench.ps1 -Action install       # Install benchmark dependencies
-.\paper2agent-bench.ps1 -Action register-mcp  # Register generated MCP server
-.\paper2agent-bench.ps1 -Action labels        # Run labeling pass
-.\paper2agent-bench.ps1 -Action analyze       # Produce grading summary
+.\paper2agent-suite\Paper2AgentBench\paper2agent-bench.ps1 -Action install       # Install benchmark dependencies
+.\paper2agent-suite\Paper2AgentBench\paper2agent-bench.ps1 -Action register-mcp  # Register generated MCP server
+.\paper2agent-suite\Paper2AgentBench\paper2agent-bench.ps1 -Action labels        # Run labeling pass
+.\paper2agent-suite\Paper2AgentBench\paper2agent-bench.ps1 -Action analyze       # Produce grading summary
 ```
 
 ---
@@ -368,20 +272,20 @@ relationships for rapid orientation and architecture Q&A.
 
 **Installed at:** `C:\Users\adelm\SeaBridgeAI\autoresearch\graphify\`
 
-**Output:** `graphify-out/` in each project root.
+**Output:** `graphify/output/` in each project root.
 
 **Run:**
 
 ```powershell
 # Query graph (from manageesg-backend)
-.\graphify.ps1 query "show the AI manager to autoresearch handoff flow" --graph graphify-out/graph.json
+.\graphify.ps1 query "show the AI manager to autoresearch handoff flow" --graph graphify/output/graph.json
 
 # Rebuild after code changes
 python3 -c "from graphify.watch import _rebuild_code; from pathlib import Path; _rebuild_code(Path('.'))"
 ```
 
 **Usage rule:** Before answering architecture or codebase questions, read
-`graphify-out/GRAPH_REPORT.md` for god nodes and community structure.
+`graphify/output/GRAPH_REPORT.md` for god nodes and community structure.
 
 ---
 
@@ -506,7 +410,7 @@ The co-scientist stack integrates with ECC through:
   hallucinated technical claims before code is written
 - **AGENTS.md / CLAUDE.md:** Both autoresearch and manageesg-backend AGENTS.md files
   document all tools so any agent knows how to trigger them
-- **Graphify:** `graphify-out/GRAPH_REPORT.md` gives every agent instant architecture context
+- **Graphify:** `graphify/output/GRAPH_REPORT.md` gives every agent instant architecture context
 
 ---
 
@@ -516,15 +420,14 @@ The co-scientist stack integrates with ECC through:
 |------|--------|--------------|
 | **sustainability_research.ps1** | `autoresearch/sustainability_research.ps1` | **Canonical unified entry point** |
 | feynman | `autoresearch/feynman/` | `feynman` (global PATH via npm link) |
-| feynman wrapper | `autoresearch/feynman.ps1` | PowerShell convenience wrapper |
+| feynman wrapper | `autoresearch/feynman/feynman.ps1` | PowerShell convenience wrapper |
 | feynman env | `autoresearch/feynman/.env` | API keys for Feynman |
-| AI-CoScientist | `autoresearch/AI-CoScientist/` | `python example.py` or orchestrator |
-| ai-scientist | `autoresearch/ai-scientist/` | `co-scientist-orchestrator.ps1 run-ai-scientist` |
-| Paper2Agent | `autoresearch/Paper2Agent/` | `Paper2Agent.sh` or orchestrator |
-| Paper2AgentBench | `autoresearch/Paper2AgentBench/` | `paper2agent-bench.ps1` |
+| AI-CoScientist | `autoresearch/archived/AI-CoScientist/` | `python example.py` or orchestrator |
+| Paper2Agent | `autoresearch/paper2agent-suite/Paper2Agent/` | `Paper2Agent.sh` or orchestrator |
+| Paper2AgentBench | `autoresearch/paper2agent-suite/Paper2AgentBench/` | `paper2agent-bench.ps1` |
 | graphify | `autoresearch/graphify/` | `graphify.ps1 query` |
 | unsloth | `everything-claude-code/unsloth/` | `unsloth studio` / `unsloth train` |
-| Orchestrator | `autoresearch/co-scientist-orchestrator.ps1` | AI-CoScientist + ai-scientist entry point |
+| Orchestrator | `autoresearch/co-scientist-orchestrator.ps1` | AI-CoScientist entry point |
 | Sustainability workflow | `autoresearch/SUSTAINABILITY_WORKFLOW.md` | Detailed runbook for all 3 scenarios |
 
 ---
@@ -550,9 +453,8 @@ The co-scientist stack integrates with ECC through:
 | feynman `.env` API keys | Edit `autoresearch/feynman/.env` — set `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` |
 | feynman setup (Pi runtime) | **Pending** — run `feynman setup` interactively once after setting API keys |
 | feynman skills (global/ECC/local) | Done — 21 items in each location |
-| AI-CoScientist deps | `pip install -r autoresearch/AI-CoScientist/requirements.txt` |
-| ai-scientist deps | `pip install -r autoresearch/ai-scientist/requirements.txt` |
-| Paper2Agent deps | See `autoresearch/Paper2Agent/README.md` |
+| AI-CoScientist deps | `pip install -r autoresearch/archived/AI-CoScientist/requirements.txt` |
+| Paper2Agent deps | See `autoresearch/paper2agent-suite/Paper2Agent/README.md` |
 | unsloth CLI + Studio | Operational — RTX 4090 confirmed |
 | unsloth Gemma 4 access | **Pending** — set `HF_TOKEN` + accept model license |
 
@@ -564,7 +466,6 @@ The co-scientist stack integrates with ECC through:
 |------|-----------|----------------------|
 | feynman (research only) | Low | No — manual opt-in per run |
 | AI-CoScientist | Medium | Yes — API cost; approval from adelmar@seabridge.ai |
-| ai-scientist | **High** | Yes + **ISOLATED ENVIRONMENT** required; no production machines |
 | Paper2Agent | Medium | Yes — 30min–3h runtime; approval from adelmar@seabridge.ai |
 | Paper2AgentBench | Low | No |
 | graphify | Low | No — read-only graph queries |

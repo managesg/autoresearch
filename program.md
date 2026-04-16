@@ -12,7 +12,7 @@ Never authorize deletion of repositories, source folders, databases, or infrastr
 # autoresearch
 
 > **Co-Scientist Stack context**: This experiment loop is one component of a broader AI research stack.
-> See [AI_COSCIENTIST_STACK.md](AI_COSCIENTIST_STACK.md) for the full picture: Feynman (research), AI-CoScientist (hypothesis evolution), ai-scientist (autonomous experiments), Paper2Agent, Graphify, and the manageesg-backend production layer.
+> See [AI_COSCIENTIST_STACK.md](AI_COSCIENTIST_STACK.md) for the full picture: Feynman (research), Paper2Agent, Graphify, and the manageesg-backend production layer.
 > For sustainability research workflows, run: `.\sustainability_research.ps1 -Scenario B` (improve an existing backend agent)
 
 This is an experiment to have the LLM do its own research.

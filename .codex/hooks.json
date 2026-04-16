@@ -33,16 +33,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -d 'C:/Users/adelm/SeaBridgeAI/autoresearch/AI-CoScientist' ] && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"ai-coscientist: AI-CoScientist (Swarm) is available for multi-agent scientific ideation. Manual opt-in required. Requires API keys and incurs LLM cost. Use co-scientist-orchestrator.ps1 -Action run-coscientist -Task <description>.\"}}' || true"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "[ -d 'C:/Users/adelm/SeaBridgeAI/autoresearch/ai-scientist' ] && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"ai-scientist: AI-Scientist (Sakana) is available. ISOLATION REQUIRED — this framework executes model-written code. Never run outside a sandboxed environment. Manual opt-in required. Use co-scientist-orchestrator.ps1 -Action run-ai-scientist.\"}}' || true"
+            "command": "[ -d 'C:/Users/adelm/SeaBridgeAI/autoresearch/archived/AI-CoScientist' ] && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"ai-coscientist: ARCHIVED — output feeds nowhere in current pipeline. Use Feynman instead: co-scientist-orchestrator.ps1 -Action run-feynman -Task <description>.\"}}' || true"
           }
         ]
       }

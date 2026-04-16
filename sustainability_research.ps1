@@ -49,7 +49,7 @@ param(
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# ─── Helpers ─────────────────────────────────────────────────────────────────
+# --- Helpers ------------------------------------------------------------------
 
 function Write-Step {
     param([string]$Step, [string]$Msg)
@@ -78,10 +78,10 @@ function Confirm-CostGate {
 
 function Invoke-Feynman {
     param([string]$Query, [switch]$Deep)
-    $feynmanScript = Join-Path $ScriptDir "feynman.ps1"
+    $feynmanScript = Join-Path $ScriptDir "feynman\feynman.ps1"
     if (-not (Test-Path $feynmanScript)) {
         Write-Host "  ERROR: feynman.ps1 not found at $feynmanScript" -ForegroundColor Red
-        Write-Host "  Run: Copy-Item manageesg-backend/feynman.ps1 autoresearch/ or check the autoresearch root." -ForegroundColor Yellow
+        Write-Host "  Check that feynman/ is cloned under the autoresearch root." -ForegroundColor Yellow
         return
     }
     if ($Deep) {
@@ -99,7 +99,7 @@ function Invoke-Feynman {
 
 function Invoke-Paper2Agent {
     param([string]$GithubUrl, [string]$ProjectDir)
-    $script = Join-Path $ScriptDir "paper2agent.ps1"
+    $script = Join-Path $ScriptDir "paper2agent-suite\Paper2Agent\paper2agent.ps1"
     if (-not (Test-Path $script)) {
         Write-Host "  ERROR: paper2agent.ps1 not found at $script" -ForegroundColor Red
         return
@@ -113,7 +113,7 @@ function Invoke-Paper2Agent {
     }
 }
 
-# ─── Scenario A: New ESG Research Question ────────────────────────────────────
+# --- Scenario A: New ESG Research Question ------------------------------------
 
 function Run-ScenarioA {
     Write-Host "`n========================================" -ForegroundColor Cyan
@@ -160,7 +160,7 @@ function Run-ScenarioA {
     Write-Host "Next: register the MCP server in .mcp.json or wire it into an ai_agents/ module." -ForegroundColor Green
 }
 
-# ─── Scenario B: Improve an Existing Backend Agent ────────────────────────────
+# --- Scenario B: Improve an Existing Backend Agent ----------------------------
 
 function Run-ScenarioB {
     Write-Host "`n===============================================" -ForegroundColor Cyan
@@ -184,7 +184,7 @@ function Run-ScenarioB {
         Write-Host "  Running Graphify..." -ForegroundColor Green
         Invoke-Expression $graphifyCmd
     } else {
-        Write-Host "  graphify.ps1 not found — skipping Graphify step." -ForegroundColor Yellow
+        Write-Host "  graphify.ps1 not found - skipping Graphify step." -ForegroundColor Yellow
         Write-Host "  Read graphify-out/GRAPH_REPORT.md manually if available." -ForegroundColor Yellow
     }
 
@@ -200,7 +200,7 @@ function Run-ScenarioB {
     Write-Host "Feynman output: autoresearch/feynman/outputs/" -ForegroundColor Green
 }
 
-# ─── Scenario C: ESG Data Intelligence Question ───────────────────────────────
+# --- Scenario C: ESG Data Intelligence Question -------------------------------
 
 function Run-ScenarioC {
     Write-Host "`n===============================================" -ForegroundColor Cyan
@@ -220,14 +220,14 @@ function Run-ScenarioC {
     Write-Host "Run Berry audit_trace_budget in Claude Code to verify factual claims before acting." -ForegroundColor Yellow
 }
 
-# ─── Main ─────────────────────────────────────────────────────────────────────
+# --- Main ---------------------------------------------------------------------
 
 Write-Host ""
 Write-Host "SeaBridgeAI Sustainability Research Orchestrator" -ForegroundColor White
 Write-Host "Stack: Feynman | Paper2Agent | Graphify | Unsloth | autoresearch" -ForegroundColor DarkGray
 Write-Host "See: AI_COSCIENTIST_STACK.md | SUSTAINABILITY_WORKFLOW.md" -ForegroundColor DarkGray
 if ($DryRun) {
-    Write-Host "[DRY RUN MODE — no cost-incurring steps will execute]" -ForegroundColor Yellow
+    Write-Host "[DRY RUN MODE - no cost-incurring steps will execute]" -ForegroundColor Yellow
 }
 
 switch ($Scenario) {

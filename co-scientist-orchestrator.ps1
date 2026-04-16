@@ -1,7 +1,7 @@
 param(
     [Parameter(Mandatory = $true)]
     [ValidateSet("build-graphs", "query-graph", "build-paper-agent", "benchmark-paper-agent",
-                 "run-coscientist", "run-ai-scientist", "run-feynman", "status", "help")]
+                 "run-coscientist", "run-feynman", "run-strix", "status", "help")]
     [string]$Action,
 
     # graph actions
@@ -14,13 +14,21 @@ param(
     [string[]]$Tutorials,     # build-paper-agent (optional): tutorial topics
     [string]$BenchAction,     # benchmark-paper-agent: install|register-mcp|labels|analyze
 
-    # co-scientist / ai-scientist actions
-    [string]$Task,            # run-coscientist / run-feynman: research task description
-    [string]$Idea,            # run-ai-scientist (optional): seed idea for experiment
+    # feynman actions
+    [string]$Task,            # run-feynman: research task description
 
     # feynman options
     [switch]$DeepResearch,    # run-feynman: use deepresearch (multi-agent) mode instead of single query
     [string]$FeynmanProvider, # run-feynman (optional): custom provider (e.g. "ollama")
+
+    # strix options
+    [ValidateSet("backend", "frontend", "custom")]
+    [string]$StrixTarget = "backend",  # run-strix: which target to scan
+    [string]$StrixPath = "",           # run-strix: custom path (when StrixTarget=custom)
+    [ValidateSet("quick", "standard", "deep")]
+    [string]$StrixMode = "deep",       # run-strix: scan depth
+    [string]$StrixModel = "anthropic/claude-sonnet-4-6",  # run-strix: LLM model
+    [switch]$StrixHeadless,            # run-strix: non-interactive mode
 
     [switch]$DryRun
 )
@@ -31,11 +39,12 @@ $workspaceRoot     = Split-Path -Parent $PSScriptRoot
 $backendRoot       = Join-Path $workspaceRoot "manageesg-backend"
 $eccRoot           = Join-Path $workspaceRoot "everything-claude-code"
 $graphifyRepo      = Join-Path $autoresearchRoot "graphify"
-$paper2agentRepo   = Join-Path $autoresearchRoot "Paper2Agent"
-$paper2agentBench  = Join-Path $autoresearchRoot "Paper2AgentBench"
-$coScientistRepo   = Join-Path $autoresearchRoot "AI-CoScientist"
-$aiScientistRepo   = Join-Path $autoresearchRoot "ai-scientist"
+$paper2agentRepo   = Join-Path $autoresearchRoot "paper2agent-suite\Paper2Agent"
+$paper2agentBench  = Join-Path $autoresearchRoot "paper2agent-suite\Paper2AgentBench"
+$coScientistRepo   = Join-Path $autoresearchRoot "archived\AI-CoScientist"
 $feynmanRepo       = Join-Path $autoresearchRoot "feynman"
+$strixRepo         = Join-Path $autoresearchRoot "strix"
+$frontendRoot      = Join-Path $workspaceRoot "manageesg-frontend"
 $pythonExe         = Join-Path $autoresearchRoot ".venv\Scripts\python.exe"
 
 function Invoke-OrDryRun {
@@ -75,9 +84,9 @@ ACTIONS
   query-graph            Query an existing Graphify knowledge graph
   build-paper-agent      Convert a paper/code repo into an MCP-backed agent (Paper2Agent)
   benchmark-paper-agent  Run Paper2AgentBench evaluation on generated agents
-  run-coscientist        Launch multi-agent scientific ideation via AI-CoScientist (Swarm)
-  run-ai-scientist       Run autonomous experiment generation via AI-Scientist (Sakana)
+  run-coscientist        [ARCHIVED] AI-CoScientist archived at autoresearch/archived/AI-CoScientist/; use run-feynman instead
   run-feynman            Run Feynman AI research agent (single query or deepresearch)
+  run-strix              Run Strix AI security pentest against backend or frontend
   status                 Report clone presence for all 6 tool repos
   help                   Show this message
 
@@ -88,10 +97,14 @@ FLAGS
   -GithubUrl <url>       For build-paper-agent: source repo URL
   -Tutorials <topics>    For build-paper-agent (optional): comma-separated tutorial topics
   -BenchAction <action>  For benchmark-paper-agent: install | register-mcp | labels | analyze
-  -Task <text>           For run-coscientist / run-feynman: research task or query string
-  -Idea <text>           For run-ai-scientist (optional): seed idea for experiment
+  -Task <text>           For run-feynman: research task or query string
   -DeepResearch          For run-feynman: use multi-agent deepresearch mode (slower, more thorough)
   -FeynmanProvider       For run-feynman (optional): custom provider (e.g. "ollama")
+  -StrixTarget <target>  For run-strix: backend | frontend | custom (default: backend)
+  -StrixPath <path>      For run-strix: custom target path (when StrixTarget=custom)
+  -StrixMode <mode>      For run-strix: standard | quick (default: standard)
+  -StrixModel <model>    For run-strix: LLM model (default: anthropic/claude-sonnet-4-6)
+  -StrixHeadless         For run-strix: non-interactive headless mode
   -DryRun                Print commands without executing
 
 EXAMPLES
@@ -100,10 +113,11 @@ EXAMPLES
   .\co-scientist-orchestrator.ps1 -Action query-graph -Query "show AI manager handoff flow"
   .\co-scientist-orchestrator.ps1 -Action build-paper-agent -ProjectDir TISSUE_Agent -GithubUrl https://github.com/sunericd/TISSUE
   .\co-scientist-orchestrator.ps1 -Action benchmark-paper-agent -BenchAction analyze
-  .\co-scientist-orchestrator.ps1 -Action run-coscientist -Task "Identify ESG risk factors in climate transition scenarios"
-  .\co-scientist-orchestrator.ps1 -Action run-ai-scientist -Idea "Novel ESG metric combining physical risk and regulatory exposure"
   .\co-scientist-orchestrator.ps1 -Action run-feynman -Task "What are the latest TNFD disclosure requirements for nature risk?"
   .\co-scientist-orchestrator.ps1 -Action run-feynman -Task "Biodiversity net gain methodologies" -DeepResearch
+  .\co-scientist-orchestrator.ps1 -Action run-strix -StrixTarget backend
+  .\co-scientist-orchestrator.ps1 -Action run-strix -StrixTarget frontend -StrixMode quick
+  .\co-scientist-orchestrator.ps1 -Action run-strix -StrixTarget backend -StrixHeadless
 "@
     }
 
@@ -114,16 +128,16 @@ EXAMPLES
             "Paper2Agent"     = $paper2agentRepo
             "Paper2AgentBench"= $paper2agentBench
             "AI-CoScientist"  = $coScientistRepo
-            "ai-scientist"    = $aiScientistRepo
             "feynman"         = $feynmanRepo
+            "strix"           = $strixRepo
         }
         $cloneUrls = @{
             "graphify"        = "https://github.com/safishamsi/graphify"
             "Paper2Agent"     = "https://github.com/jmiao24/Paper2Agent"
             "Paper2AgentBench"= "https://github.com/jmiao24/Paper2AgentBench"
             "AI-CoScientist"  = "https://github.com/The-Swarm-Corporation/AI-CoScientist"
-            "ai-scientist"    = "https://github.com/sakanaai/ai-scientist"
             "feynman"         = "https://github.com/getcompanion-ai/feynman"
+            "strix"           = "https://github.com/usestrix/strix"
         }
         foreach ($name in $repos.Keys) {
             $path = $repos[$name]
@@ -141,12 +155,12 @@ EXAMPLES
             Write-Host "  [MISSING] Python venv -> $pythonExe"
             Write-Host "             Setup: cd `"$autoresearchRoot`" && uv sync"
         }
-        # Check for graph output
-        $graphJson = Join-Path $backendRoot "graphify-out\graph.json"
+        # Check for graph output (autoresearch graph lives inside graphify/output/)
+        $graphJson = Join-Path $graphifyRepo "output\graph.json"
         if (Test-Path -LiteralPath $graphJson) {
-            Write-Host "  [OK]     Backend graph -> $graphJson"
+            Write-Host "  [OK]     Autoresearch graph -> $graphJson"
         } else {
-            Write-Host "  [INFO]   No backend graph yet. Run: .\co-scientist-orchestrator.ps1 -Action build-graphs -RepoName backend"
+            Write-Host "  [INFO]   No autoresearch graph yet. Run: .\co-scientist-orchestrator.ps1 -Action build-graphs -RepoName autoresearch"
         }
     }
 
@@ -166,7 +180,9 @@ EXAMPLES
                 exit 1
             }
             $repoPath = $targets[$name]
-            $outDir   = Join-Path $repoPath "graphify-out"
+            # Autoresearch graph output lives inside graphify/output/ to keep tool+output together.
+            # All other repos write their graph to <repo>/graphify-out/ as before.
+            $outDir   = if ($name -eq "autoresearch") { Join-Path $graphifyRepo "output" } else { Join-Path $repoPath "graphify-out" }
             $env:PYTHONPATH = "$graphifyRepo;$env:PYTHONPATH"
             Invoke-OrDryRun "Build graph for $name ($repoPath)" {
                 # graphify has no 'build' CLI command — use the Python API directly (AST-only, free)
@@ -215,9 +231,9 @@ print(f'[graphify] Report saved -> {report_md}')
         Assert-Repo $graphifyRepo "graphify"
         Assert-Python
         if (-not $Query) { Write-Error "-Query is required for query-graph"; exit 1 }
-        $graphJson = Join-Path $backendRoot "graphify-out\graph.json"
+        $graphJson = Join-Path $graphifyRepo "output\graph.json"
         if (-not (Test-Path -LiteralPath $graphJson)) {
-            Write-Warning "No backend graph found at $graphJson. Run build-graphs first."
+            Write-Warning "No autoresearch graph found at $graphJson. Run build-graphs -RepoName autoresearch first."
         }
         $env:PYTHONPATH = "$graphifyRepo;$env:PYTHONPATH"
         Invoke-OrDryRun "Query graph: $Query" {
@@ -231,7 +247,7 @@ print(f'[graphify] Report saved -> {report_md}')
         if (-not $GithubUrl)  { Write-Error "-GithubUrl is required for build-paper-agent"; exit 1 }
         Write-Host "[NOTICE] Paper2Agent runs can take 30 min to 3+ hours and may incur API costs."
         Write-Host "         Ensure you have approved this run explicitly."
-        $ps1 = Join-Path $backendRoot "paper2agent.ps1"
+        $ps1 = Join-Path $paper2agentRepo "paper2agent.ps1"
         $extraArgs = @("-ProjectDir", $ProjectDir, "-GithubUrl", $GithubUrl)
         if ($Tutorials) { $extraArgs += @("-Tutorials", ($Tutorials -join ",")) }
         if ($DryRun)    { $extraArgs += "-DryRun" }
@@ -243,7 +259,7 @@ print(f'[graphify] Report saved -> {report_md}')
     "benchmark-paper-agent" {
         Assert-Repo $paper2agentBench "Paper2AgentBench"
         if (-not $BenchAction) { Write-Error "-BenchAction is required (install|register-mcp|labels|analyze)"; exit 1 }
-        $ps1 = Join-Path $backendRoot "paper2agent-bench.ps1"
+        $ps1 = Join-Path $paper2agentBench "paper2agent-bench.ps1"
         $extraArgs = @("-Action", $BenchAction)
         if ($DryRun) { $extraArgs += "-DryRun" }
         Invoke-OrDryRun "Benchmark paper agent: $BenchAction" {
@@ -252,34 +268,8 @@ print(f'[graphify] Report saved -> {report_md}')
     }
 
     "run-coscientist" {
-        Assert-Repo $coScientistRepo "AI-CoScientist"
-        Assert-Python
-        if (-not $Task) { Write-Error "-Task is required for run-coscientist"; exit 1 }
-        Write-Host "[COST NOTICE] AI-CoScientist is a multi-agent Swarm framework."
-        Write-Host "              This may invoke many LLM calls and incur significant API cost."
-        Write-Host "              Ensure explicit written approval from adelmar@seabridge.ai before proceeding."
-        $env:PYTHONPATH = "$coScientistRepo;$env:PYTHONPATH"
-        Invoke-OrDryRun "Run AI-CoScientist: $Task" {
-            & $pythonExe -m ai_coscientist --task $Task
-        }
-    }
-
-    "run-ai-scientist" {
-        Write-Host "[ISOLATION REQUIRED] AI-Scientist (Sakana) generates and EXECUTES model-written code."
-        Write-Host "                     This action MUST be run in an isolated/sandboxed environment."
-        Write-Host "                     Never run on a production machine or shared infrastructure."
-        Write-Host "                     Ensure explicit written approval from adelmar@seabridge.ai."
-        if ($DryRun) {
-            Write-Host "[DRY RUN] Would launch AI-Scientist from: $aiScientistRepo"
-            exit 0
-        }
-        Assert-Repo $aiScientistRepo "AI-Scientist"
-        Assert-Python
-        $env:PYTHONPATH = "$aiScientistRepo;$env:PYTHONPATH"
-        $extraArgs = @()
-        if ($Idea) { $extraArgs += @("--idea", $Idea) }
-        & $pythonExe -m aiscientist @extraArgs
-        exit $LASTEXITCODE
+        Write-Error "AI-CoScientist is ARCHIVED and cannot be invoked. Use run-feynman instead:`n  .\co-scientist-orchestrator.ps1 -Action run-feynman -Task `"$Task`""
+        exit 1
     }
 
     "run-feynman" {
@@ -325,5 +315,63 @@ print(f'[graphify] Report saved -> {report_md}')
             }
         }
         exit $LASTEXITCODE
+    }
+
+    "run-strix" {
+        Assert-Repo $strixRepo "strix"
+
+        # Resolve target path
+        $resolvedTarget = switch ($StrixTarget) {
+            "backend"  { $backendRoot }
+            "frontend" { $frontendRoot }
+            "custom"   {
+                if (-not $StrixPath) { Write-Error "-StrixPath is required when StrixTarget=custom"; exit 1 }
+                $StrixPath
+            }
+        }
+
+        if (-not (Test-Path -LiteralPath $resolvedTarget)) {
+            Write-Error "Target path not found: $resolvedTarget"
+            exit 1
+        }
+
+        # Resolve API key
+        $apiKey = $env:LLM_API_KEY
+        if (-not $apiKey) {
+            if ($StrixModel -like "anthropic/*") { $apiKey = $env:ANTHROPIC_API_KEY }
+            elseif ($StrixModel -like "openai/*") { $apiKey = $env:OPENAI_API_KEY }
+        }
+        if (-not $apiKey) {
+            Write-Error "No API key found. Set LLM_API_KEY, ANTHROPIC_API_KEY, or OPENAI_API_KEY."
+            exit 1
+        }
+
+        # Build strix args
+        $strixArgs = @("--target", $resolvedTarget, "--scan-mode", $StrixMode)
+        if ($StrixHeadless) { $strixArgs += "--non-interactive" }
+
+        Write-Host "[strix] Target  : $resolvedTarget"
+        Write-Host "[strix] Model   : $StrixModel"
+        Write-Host "[strix] Mode    : $StrixMode"
+        Write-Host "[strix] Headless: $StrixHeadless"
+
+        if ($DryRun) {
+            Write-Host "[DRY RUN] STRIX_LLM=$StrixModel LLM_API_KEY=<redacted>"
+            Write-Host "[DRY RUN] cd `"$strixRepo`" && uv run strix $($strixArgs -join ' ')"
+            exit 0
+        }
+
+        Push-Location $strixRepo
+        try {
+            $env:STRIX_LLM   = $StrixModel
+            $env:LLM_API_KEY = $apiKey
+            uv run strix @strixArgs
+            $exitCode = $LASTEXITCODE
+        } finally {
+            Pop-Location
+            Remove-Item Env:\STRIX_LLM   -ErrorAction SilentlyContinue
+            Remove-Item Env:\LLM_API_KEY -ErrorAction SilentlyContinue
+        }
+        exit $exitCode
     }
 }
