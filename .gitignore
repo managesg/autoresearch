@@ -21,3 +21,9 @@ dev/
 
 # Results file
 results.tsv
+
+# graphify outputs (added by graphify setup)
+graphify-out/cache/
+graphify-out/manifest.json
+graphify-out/cost.json
+graphify-obsidian/

@@ -1,0 +1,47 @@
+# graphify ignore — autoresearch
+# This repo is the largest and most heterogeneous. Tight scoping is critical.
+
+# --- Base ---
+node_modules/
+.venv/
+venv/
+.next/
+dist/
+build/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage/
+graphify-out/
+graphify-obsidian/
+
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.claude/
+.codex/
+.gemini/
+.cursor/
+
+# --- autoresearch-specific ---
+archived/
+experiments/runs/
+experiments/checkpoints/
+**/wandb/
+**/mlruns/
+feynman/node_modules/
+paper2agent-suite/**/outputs/
+paper2agent-suite/**/reports/
+strix/strix_runs/
+graphify/          # legacy PowerShell wrapper, not the new CLI
+handoff/
+
+# ML model weights / large artifacts
+*.safetensors
+*.bin
+*.pt
+*.ckpt
+*.onnx
+*.gguf

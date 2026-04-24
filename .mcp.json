@@ -9,10 +9,26 @@
       "command": "C:/Users/adelm/AppData/Roaming/Python/Python314/Scripts/berry.exe",
       "env": {
         "BERRY_SERVICE_URL": "http://52.191.234.157:8000",
-        "OPENAI_API_KEY": "sk-K3GE1DIcXaAbBUGxVAAGvg",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
         "OPENAI_BASE_URL": "http://20.232.57.156/v1",
         "STRAWBERRY_SERVICE_URL": "http://52.191.234.157:8000"
       }
+    },
+    "falkordb": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@falkordb/mcpserver@latest"
+      ],
+      "env": {
+        "FALKORDB_HOST": "localhost",
+        "FALKORDB_PORT": "6380",
+        "FALKORDB_USERNAME": "",
+        "FALKORDB_PASSWORD": ""
+      },
+      "description": "Query cross-repo graphify knowledge graphs via OpenCypher"
     }
   }
 }
