@@ -79,7 +79,7 @@ Transform tasks into verifiable goals. State what "done" looks like and how you'
 
 **Instruction priority** (highest to lowest):
 
-1. **Hard safety rules** (§Safety above). Non-suspendable.
+1. **Hard safety rules** (§Safety above) + **`manageesg-backend/AGENTS_SYSTEM.md`** Tier-1 rules (system-wide policy for all SeaBridgeAI coding agents — overrides this file for destructive actions, authorization, and cost controls). Non-suspendable.
 2. **Karpathy coding principles** (§above) — govern HOW every task executes. Always applied.
 3. Session instructions from the user
 4. This AGENTS.md

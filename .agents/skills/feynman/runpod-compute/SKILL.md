@@ -30,7 +30,7 @@ runpodctl config --apiKey=YOUR_KEY
 ## SSH access
 
 ```bash
-ssh root@<IP> -p <PORT> -i ~/.ssh/id_ed25519
+ssh root@<IP> -p <PORT> -i <path-to-ephemeral-runpod-key>
 ```
 
 Get connection details from `runpodctl get pod <id>`. Pods must expose port `22/tcp`.

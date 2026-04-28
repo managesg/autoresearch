@@ -1,12 +1,17 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("build-graphs", "query-graph", "build-paper-agent", "benchmark-paper-agent",
+    [ValidateSet("build-graphs", "query-graph", "load-falkordb", "build-paper-agent", "benchmark-paper-agent",
                  "run-coscientist", "run-feynman", "run-strix", "status", "help")]
     [string]$Action,
 
     # graph actions
-    [string]$RepoName,        # build-graphs: "backend", "autoresearch", "ecc", or "all"
+    [string]$RepoName,        # build-graphs: "backend", "frontend", "autoresearch", "ecc", or "all"
     [string]$Query,           # query-graph: natural-language query string
+    [string]$GraphJson,       # load-falkordb: graphify graph.json path
+    [string]$GraphName,       # load-falkordb: FalkorDB graph name
+    [string]$FalkorHost = "127.0.0.1",
+    [int]$FalkorPort = 6380,
+    [switch]$FalkorDryRun,
 
     # paper-agent actions
     [string]$ProjectDir,      # build-paper-agent: output project directory name
@@ -82,6 +87,7 @@ Source-of-truth clones: C:\Users\adelm\SeaBridgeAI\autoresearch\
 ACTIONS
   build-graphs           Build Graphify knowledge graphs for one or all repos
   query-graph            Query an existing Graphify knowledge graph
+  load-falkordb          Load graphify graph.json into FalkorDB with non-destructive MERGE queries
   build-paper-agent      Convert a paper/code repo into an MCP-backed agent (Paper2Agent)
   benchmark-paper-agent  Run Paper2AgentBench evaluation on generated agents
   run-coscientist        [ARCHIVED] AI-CoScientist archived at autoresearch/archived/AI-CoScientist/; use run-feynman instead
@@ -91,8 +97,11 @@ ACTIONS
   help                   Show this message
 
 FLAGS
-  -RepoName <name>       For build-graphs: backend | autoresearch | ecc | all
+  -RepoName <name>       For build-graphs: backend | frontend | autoresearch | ecc | all
   -Query <text>          For query-graph: natural-language query
+  -GraphJson <path>      For load-falkordb: graphify graph.json path
+  -GraphName <name>      For load-falkordb: FalkorDB graph name
+  -FalkorDryRun          For load-falkordb: inspect graph without connecting to FalkorDB
   -ProjectDir <dir>      For build-paper-agent: output project directory name
   -GithubUrl <url>       For build-paper-agent: source repo URL
   -Tutorials <topics>    For build-paper-agent (optional): comma-separated tutorial topics
@@ -111,6 +120,7 @@ EXAMPLES
   .\co-scientist-orchestrator.ps1 -Action status
   .\co-scientist-orchestrator.ps1 -Action build-graphs -RepoName all -DryRun
   .\co-scientist-orchestrator.ps1 -Action query-graph -Query "show AI manager handoff flow"
+  .\co-scientist-orchestrator.ps1 -Action load-falkordb -GraphName backend -FalkorDryRun
   .\co-scientist-orchestrator.ps1 -Action build-paper-agent -ProjectDir TISSUE_Agent -GithubUrl https://github.com/sunericd/TISSUE
   .\co-scientist-orchestrator.ps1 -Action benchmark-paper-agent -BenchAction analyze
   .\co-scientist-orchestrator.ps1 -Action run-feynman -Task "What are the latest TNFD disclosure requirements for nature risk?"
@@ -170,13 +180,14 @@ EXAMPLES
         if (-not $RepoName) { $RepoName = "all" }
         $targets = @{
             "backend"     = $backendRoot
+            "frontend"    = $frontendRoot
             "autoresearch"= $autoresearchRoot
             "ecc"         = $eccRoot
         }
         $selected = if ($RepoName -eq "all") { $targets.Keys } else { @($RepoName) }
         foreach ($name in $selected) {
             if (-not $targets.ContainsKey($name)) {
-                Write-Error "Unknown repo name '$name'. Use: backend | autoresearch | ecc | all"
+                Write-Error "Unknown repo name '$name'. Use: backend | frontend | autoresearch | ecc | all"
                 exit 1
             }
             $repoPath = $targets[$name]
@@ -238,6 +249,45 @@ print(f'[graphify] Report saved -> {report_md}')
         $env:PYTHONPATH = "$graphifyRepo;$env:PYTHONPATH"
         Invoke-OrDryRun "Query graph: $Query" {
             & $pythonExe -m graphify query $Query --graph $graphJson
+        }
+    }
+
+    "load-falkordb" {
+        Assert-Repo $graphifyRepo "graphify"
+        Assert-Python
+        if (-not $GraphName) {
+            $GraphName = if ($RepoName) { $RepoName } else { "backend" }
+        }
+        if (-not $GraphJson) {
+            if ($GraphName -eq "autoresearch") {
+                $GraphJson = Join-Path $graphifyRepo "output\graph.json"
+            } else {
+                $repoMap = @{
+                    "backend"  = $backendRoot
+                    "frontend" = $frontendRoot
+                    "ecc"      = $eccRoot
+                }
+                if (-not $repoMap.ContainsKey($GraphName)) {
+                    Write-Error "-GraphJson is required when -GraphName is not backend, frontend, ecc, or autoresearch"
+                    exit 1
+                }
+                $GraphJson = Join-Path $repoMap[$GraphName] "graphify-out\graph.json"
+            }
+        }
+        if (-not (Test-Path -LiteralPath $GraphJson)) {
+            Write-Error "Graph JSON not found at: $GraphJson"
+            exit 1
+        }
+        $loader = Join-Path $graphifyRepo "load_to_falkordb.py"
+        $loaderArgs = @(
+            "--graph-json", $GraphJson,
+            "--graph-name", $GraphName,
+            "--host", $FalkorHost,
+            "--port", $FalkorPort
+        )
+        if ($FalkorDryRun) { $loaderArgs += "--dry-run" }
+        Invoke-OrDryRun "Load graph into FalkorDB graph '$GraphName' from $GraphJson" {
+            & $pythonExe $loader @loaderArgs
         }
     }
 

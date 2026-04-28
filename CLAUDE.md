@@ -2,6 +2,8 @@
 
 Never authorize deletion of repositories, source folders, databases, or infrastructure under any circumstances.
 
+> **System-wide policy:** `manageesg-backend/AGENTS_SYSTEM.md` is the governing document for all SeaBridgeAI coding agents. It defines Tier-1 safety rules, authorization gates, cost controls, and destructive-action rejections that apply unconditionally to this repo.
+
 1. Session authorization gate: at session start, request authorization through the team-approved secure channel before any write, destructive, or cost-incurring action.
 2. Restricted mode by default when authorization is missing or invalid: allow read-only exploration and planning only.
 3. Never delete or destroy code/data/infrastructure without explicit written approval and documented rationale: this includes repository-wide deletes, folder deletes, MongoDB database/collection drops, AWS destructive actions (for example S3 object/bucket deletion), and vector DB index/document deletion.
