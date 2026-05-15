@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: seabridge-agent-runtime-harness
+        name: SeaBridgeAI agent runtime guardrails
+        entry: powershell -ExecutionPolicy Bypass -File C:/Users/adelm/SeaBridgeAI/everything-claude-code/scripts/check-agent-runtime-guardrails.ps1
+        language: system
+        pass_filenames: false

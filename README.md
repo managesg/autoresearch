@@ -28,8 +28,8 @@ This repo contains two things that share the same directory:
 | Tool | Path | Purpose | Entry Point |
 |------|------|---------|-------------|
 | **Feynman** | `feynman/` | Cited ESG research briefs; multi-agent deep research | `feynman.ps1` / `co-scientist-orchestrator.ps1 -Action run-feynman` |
-| **Paper2Agent** | `Paper2Agent/` | Convert a paper/code GitHub repo into an MCP-backed agent | `paper2agent.ps1` / `co-scientist-orchestrator.ps1 -Action build-paper-agent` |
-| **Paper2AgentBench** | `Paper2AgentBench/` | Benchmark generated paper agents | `paper2agent-bench.ps1` / `co-scientist-orchestrator.ps1 -Action benchmark-paper-agent` |
+| **Paper2Agent** | `paper2agent-suite/Paper2Agent/` | Convert a paper/code GitHub repo into an MCP-backed agent | `paper2agent.ps1` / `co-scientist-orchestrator.ps1 -Action build-paper-agent` |
+| **Paper2AgentBench** | `paper2agent-suite/Paper2AgentBench/` | Benchmark generated paper agents | `paper2agent-bench.ps1` / `co-scientist-orchestrator.ps1 -Action benchmark-paper-agent` |
 | **Graphify** | `graphify/` | Build and query knowledge graphs from repo source code | `co-scientist-orchestrator.ps1 -Action build-graphs` |
 | **Unsloth** | `unsloth/` | Fine-tuning and model optimization utilities | See `unsloth/README.md` |
 | **Streamlit UI** | `app.py` | Two-phase research UI: Feynman → Paper2Agent | `run_ui.ps1` (port 8501) |
@@ -75,7 +75,7 @@ Outputs land in `feynman/outputs/<slug>.md`.
 
 > Paper2Agent costs ~$2–10 and can take 30 min – 3 hrs. Requires explicit written approval from adelmar@seabridge.ai.
 
-Outputs: `Paper2Agent/<project_dir>/src/`, `Paper2Agent/<project_dir>/reports/`
+Outputs: `paper2agent-suite/Paper2Agent/<project_dir>/src/`, `paper2agent-suite/Paper2Agent/<project_dir>/reports/`
 
 ### Backend API Endpoints
 

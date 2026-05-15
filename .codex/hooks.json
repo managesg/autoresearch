@@ -33,10 +33,21 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -d 'C:/Users/adelm/SeaBridgeAI/autoresearch/archived/AI-CoScientist' ] && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"ai-coscientist: ARCHIVED — output feeds nowhere in current pipeline. Use Feynman instead: co-scientist-orchestrator.ps1 -Action run-feynman -Task <description>.\"}}' || true"
+            "command": "[ -d 'C:/Users/adelm/SeaBridgeAI/autoresearch/archived/AI-CoScientist' ] && echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"ai-coscientist: ARCHIVED - output feeds nowhere in current pipeline. Use Feynman instead: co-scientist-orchestrator.ps1 -Action run-feynman -Task <description>.\"}}' || true"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"C:/Users/adelm/SeaBridgeAI/everything-claude-code/scripts/sentinel_preflight_gate.py\""
           }
         ]
       }
     ]
   }
 }
+
+

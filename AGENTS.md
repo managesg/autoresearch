@@ -11,6 +11,17 @@ Never authorize deletion of repositories, source folders, databases, or infrastr
 7. Use the team-shared authorization password from your secure internal channel when approval is required; never store that password in code, docs, logs, or commits.
 # AutoResearch � Codex Instructions
 
+## SeaBridgeAI Cross-Agent Skill Contract
+
+`SYSTEM_ID: SEABRIDGE_AGENT_SYSTEM_V1` and
+`C:\Users\adelm\SeaBridgeAI\everything-claude-code` are the canonical shared
+skill source for Claude Code, Codex, Gemini, Cursor, OpenCode, and future agents.
+For non-trivial work, load local docs first, then ECC
+`SEABRIDGE_CODING_AGENT_SYSTEM.md`, `repo-integrations/autoresearch.md` if
+present, the smallest relevant `sea-*` skill, and the matching workflow/checklist.
+Keep reusable guidance in ECC and only AutoResearch/Feynman/Paper2Agent-specific
+boundaries here.
+
 > **Co-Scientist Stack**: This repo is part of a unified AI research stack.
 > Full tool inventory and sustainability research workflows: [AI_COSCIENTIST_STACK.md](AI_COSCIENTIST_STACK.md)
 > Unified entry point: `.\sustainability_research.ps1 -Scenario A` (new ESG question) / `B` (improve agent) / `C` (data intelligence)
@@ -139,9 +150,6 @@ Optional inputs:
 - backend/runtime context
 
 Run and usage commands:
-- `npx claude-mem --help`
-- `npx claude-mem install`
-- `npx claude-mem install --ide gemini-cli`
 - `/ck:init`
 - `/ck:save`
 - `/ck:resume`
@@ -152,24 +160,20 @@ Outputs:
 - source attribution for the selected memory layer
 
 Storage and source of truth:
-- `claude-mem`: optional user-level session continuity for Claude Code and Gemini CLI
 - `ck`: ECC-native per-project working context
 - `continuous-learning-v2`: reusable learned behaviors and instincts
 - `manageesg-backend` `sustainability_ai.memory`: runtime memory for deployed agents only
 
 Compatibility and retrieval order:
-- Do not auto-enable `claude-mem` retrieval hooks when ECC hooks already inject the same context surface
-- Observation hooks may coexist; retrieval should prefer one summary source
 - Retrieval order:
   1. local repo docs and `AGENTS.md`/`CLAUDE.md`
   2. ECC project memory via `ck` and `continuous-learning-v2`
-  3. `claude-mem` session observations
-  4. backend durable memory only for actual application agent flows
+  3. backend durable memory only for actual application agent flows
 
 Safety notes:
-- `claude-mem` is optional infrastructure, not project truth
+- `claude-mem` has been removed from the active SeaBridgeAI memory stack; do not reinstall or re-enable it without a separate approval.
 - do not duplicate the same fact into all memory systems unless explicitly requested
-- do not wire `claude-mem` into backend runtime memory from this repo
+- do not wire session/project memory into backend runtime memory from this repo
 
 ## paper2agent
 
@@ -301,3 +305,35 @@ codeburn status       # compact one-liner summary
 codeburn export       # CSV/JSON export
 ```
 
+## Repository Root Organization Policy
+
+Do not place logs, smoke-test reports, QA reports, readiness reports, deployment
+reports, benchmark reports, audit reports, or agent handoffs in the repository
+root. Use the following standard locations:
+
+| Content type | Target directory |
+|---|---|
+| Audit reports | `docs/reports/audits/` |
+| Readiness reports | `docs/reports/readiness/` |
+| QA reports and results | `docs/reports/qa/` |
+| Smoke-test reports | `docs/reports/smoke-tests/` |
+| Deployment reports | `docs/reports/deployments/` |
+| Benchmark reports | `docs/reports/benchmarks/` |
+| Fix/issue reports | `docs/reports/fixes/` |
+| Handoff documents | `docs/reports/handoffs/` |
+| Conflict logs | `docs/reports/conflicts/` |
+| Onboarding guides | `docs/reports/onboarding/` |
+| Review reports | `docs/reports/reviews/` |
+| Build logs | `logs/build/` |
+| Integration logs | `logs/integration/` |
+| Playwright logs | `logs/playwright/` |
+| Agent logs | `logs/agent/` |
+| Runtime logs | `logs/runtime/` |
+| Agent run artifacts | `artifacts/agent-runs/` |
+
+
+## SeaBridgeAI Agent Baseline
+
+Repo structure, build/test/lint/typecheck/startup commands, recurring lessons, and artifact policy are local here and in ECC `repo-integrations/autoresearch.md`. All coding agents must follow ECC self-verification, controlled auto mode, and review collaboration: plan before edits, update tests when practical, prove red/green when practical, run targeted checks, broaden checks when risk warrants it, document skipped tests, and never claim completion from code changes alone. Allowed auto steps are formatting, lint/typecheck fixes, test discovery, import cleanup, small tested refactors, approved report/log moves, docs path fixes, and read-only scans. Commits, pushes, dependency installs, migrations, production data changes, auth/security changes, billing changes, destructive file operations, yolo/autonomous/dangerous modes, global installs, and long-running training jobs require explicit approval.
+
+Shared skills, Harness Engineering, Agent Shield, and Strix are inherited from ECC. Load ECC `AGENT_SKILLS.md` for `grill-me`, `ubiquitous-language`, `improve-codebase-architecture`, `sea-*` skills, and Harness reviewer skills. Load ECC `docs/harness/HARNESS_ENGINEERING.md` and `scripts/check-harness.ps1` for baseline-aware guardrails. Full vulnerability scans must use the approved ECC wrapper so Agent Shield and Strix run together only on approved local/staging scope.

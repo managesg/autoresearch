@@ -219,6 +219,22 @@ class DockerRuntime(AbstractRuntime):
 
         return self._create_container(scan_id)
 
+    # Directories that add size but no security-relevant source code
+    _SANDBOX_SKIP_DIRS = frozenset({
+        "venv", ".venv", "venv312", "venv312_backup",
+        ".git", "__pycache__", "node_modules", ".mypy_cache",
+        ".pytest_cache", ".ruff_cache", "strix_runs",
+        "dist", "build", ".eggs", ".tox", "htmlcov",
+        ".playwright-agent", ".falkordb-data",
+    })
+
+    @classmethod
+    def _sandbox_skip(cls, path: Path, root: Path) -> bool:
+        for part in path.relative_to(root).parts:
+            if part in cls._SANDBOX_SKIP_DIRS or part.endswith(".egg-info"):
+                return True
+        return path.suffix in {".pyc", ".pyo", ".pyd"}
+
     def _copy_local_directory_to_container(
         self, container: Container, local_path: str, target_name: str | None = None
     ) -> None:
@@ -233,7 +249,7 @@ class DockerRuntime(AbstractRuntime):
             tar_buffer = BytesIO()
             with tarfile.open(fileobj=tar_buffer, mode="w") as tar:
                 for item in local_path_obj.rglob("*"):
-                    if item.is_file():
+                    if item.is_file() and not self._sandbox_skip(item, local_path_obj):
                         rel_path = item.relative_to(local_path_obj)
                         arcname = Path(target_name) / rel_path if target_name else rel_path
                         tar.add(item, arcname=arcname)
