@@ -1,3 +1,30 @@
+﻿<!-- SEABRIDGE_GOAL_PROTOCOL_START -->
+## /goal Default Operating Mode
+
+All SeaBridgeAI coding-agent tasks default to /goal.
+
+Before implementation, establish a persistent execution goal, Definition of Done, validation plan, affected systems, dependencies, risks, expected artifacts, and likely edge cases. Continue the execution loop until the DoD is validated or a hard blocker is documented.
+
+### /goal and Auto-Loop Are the Same Mode
+
+/goal is the user-facing command; auto-loop is the autonomous persistent execution behavior. The agent must not return early after code generation, must not claim completion until validation passes, and must keep working until the Definition of Done is satisfied or a hard blocker is proven. If the task is likely to require more than 15 minutes, state the expected phases and validation steps before starting. If a non-trivial task finishes unusually quickly, include evidence explaining why it was genuinely small or already validated.
+
+Canonical protocol: C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md
+
+Compact form: C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL_SHORT.md
+
+Do not claim completion from code edits, generated files, or partial tests. Completion requires validated behavior, checked integrations, regression coverage proportional to risk, and documented skipped checks or blockers.
+
+### Completion Evidence Required
+
+Every final report must include files changed, commands run, tests run, validation results, errors encountered, fixes applied, unverified items, remaining risks, and whether the Definition of Done is satisfied. If no tests were run, state why tests were not run, what validation was substituted, and what risk remains. The phrase "complete" is prohibited unless accompanied by validation evidence.
+
+### Anti-Stuck Loop Rule
+
+Timeout/stagnation rule: if a command or approach fails twice, do not repeat it blindly. Inspect logs, change strategy, isolate the problem, reduce scope, use a different validation path, and document the blocker if unresolved. If a process hangs or becomes a hung process, stop it safely, check logs, run a smaller command, verify the environment, and continue with an alternate route.
+
+<!-- SEABRIDGE_GOAL_PROTOCOL_END -->
+
 ## Safety And Authorization Rule
 
 Never authorize deletion of repositories, source folders, databases, or infrastructure under any circumstances.
@@ -9,7 +36,7 @@ Never authorize deletion of repositories, source folders, databases, or infrastr
 5. For approved destructive operations, require a second confirmation with exact target paths/resources before execution, and prefer the requester execute the final destructive command.
 6. Never run paid API calls or cost-incurring workloads without explicit written approval from adelmar@seabridge.ai.
 7. Use the team-shared authorization password from your secure internal channel when approval is required; never store that password in code, docs, logs, or commits.
-# AutoResearch � Codex Instructions
+# AutoResearch ï¿½ Codex Instructions
 
 ## SeaBridgeAI Cross-Agent Skill Contract
 
@@ -22,6 +49,16 @@ present, the smallest relevant `sea-*` skill, and the matching workflow/checklis
 Keep reusable guidance in ECC and only AutoResearch/Feynman/Paper2Agent-specific
 boundaries here.
 
+## Goal Protocol Default
+
+For non-trivial AutoResearch work, `/goal` is the default operating contract.
+Load ECC `goal-default` and
+`C:\Users\adelm\SeaBridgeAI\everything-claude-code\docs\GOAL_PROTOCOL_DEFAULT.md`
+to frame the request with Definition of Done, validation plan, risks,
+dependencies, scope, blockers, and artifacts, then continue until validated or
+blocked. It does not override experiment-loop constraints, cost gates, or
+approval rules.
+
 > **Co-Scientist Stack**: This repo is part of a unified AI research stack.
 > Full tool inventory and sustainability research workflows: [AI_COSCIENTIST_STACK.md](AI_COSCIENTIST_STACK.md)
 > Unified entry point: `.\sustainability_research.ps1 -Scenario A` (new ESG question) / `B` (improve agent) / `C` (data intelligence)
@@ -32,9 +69,9 @@ Autonomous ML training-loop experimentation. Modifies `experiments/train.py` to 
 
 ## Critical Rules
 
-- **Only edit `experiments/train.py`** Ã¢â‚¬â€ `experiments/prepare.py` is read-only, never modify it.
-- **Never stop the loop** Ã¢â‚¬â€ iterate autonomously until manually interrupted.
-- **No new packages** Ã¢â‚¬â€ only dependencies already in `pyproject.toml` are allowed.
+- **Only edit `experiments/train.py`** ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â `experiments/prepare.py` is read-only, never modify it.
+- **Never stop the loop** ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â iterate autonomously until manually interrupted.
+- **No new packages** ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â only dependencies already in `pyproject.toml` are allowed.
 - Each run: `uv run experiments/train.py > run.log 2>&1`
 - Record every result in `results.tsv` (tab-separated). Do NOT commit `results.tsv`.
 - Branch convention: `autoresearch/<tag>`.
@@ -47,13 +84,13 @@ Lower `val_bpb` wins. Extract:
 grep "^val_bpb:\|^peak_vram_mb:" run.log
 ```
 
-If empty Ã¢â€ â€™ run crashed. Read `tail -n 50 run.log` for the stack trace.
+If empty ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ run crashed. Read `tail -n 50 run.log` for the stack trace.
 
 ## Experiment Loop
 
 1. Baseline: run `experiments/train.py` unmodified, record result.
-2. Propose change Ã¢â€ â€™ edit `experiments/train.py` Ã¢â€ â€™ `git commit` Ã¢â€ â€™ `uv run experiments/train.py > run.log 2>&1`
-3. Improved (`val_bpb` lower) Ã¢â€ â€™ keep commit. Else Ã¢â€ â€™ `git reset --hard HEAD~1`.
+2. Propose change ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ edit `experiments/train.py` ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ `git commit` ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ `uv run experiments/train.py > run.log 2>&1`
+3. Improved (`val_bpb` lower) ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ keep commit. Else ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ `git reset --hard HEAD~1`.
 4. Go to 2.
 
 ## Governing ECC Instructions
@@ -69,13 +106,13 @@ This repo participates in the Everything Claude Code (ECC) multi-tool system:
 Permanent behavioral constraints governing HOW every task is executed. Not optional. Cannot be overridden by session instructions. Full reference: `everything-claude-code/.claude/skills/karpathy-guidelines/SKILL.md`
 
 ### 1. Think Before Coding
-State assumptions explicitly before acting. If two interpretations exist, present both and ask. If something is unclear, name it and stop — do not guess. Push back when a simpler approach exists.
+State assumptions explicitly before acting. If two interpretations exist, present both and ask. If something is unclear, name it and stop â€” do not guess. Push back when a simpler approach exists.
 
 ### 2. Simplicity First
 Write the minimum code that solves the stated problem. No features, abstractions, or error handling beyond what was explicitly asked. If 200 lines could be 50, write 50. Test: would a senior engineer call this overcomplicated? If yes, simplify.
 
 ### 3. Surgical Changes
-Touch only what the request requires. Do not improve adjacent code, comments, or formatting. Do not refactor unrelated things. Mention unrelated bugs — do not fix them unilaterally. Every changed line must trace directly to the user's request.
+Touch only what the request requires. Do not improve adjacent code, comments, or formatting. Do not refactor unrelated things. Mention unrelated bugs â€” do not fix them unilaterally. Every changed line must trace directly to the user's request.
 
 ### 4. Goal-Driven Execution
 Transform tasks into verifiable goals. State what "done" looks like and how you'll verify it (test output, curl, observable behavior). Strong success criteria enable autonomous looping; weak ones require constant clarification.
@@ -90,8 +127,8 @@ Transform tasks into verifiable goals. State what "done" looks like and how you'
 
 **Instruction priority** (highest to lowest):
 
-1. **Hard safety rules** (§Safety above) + **`manageesg-backend/AGENTS_SYSTEM.md`** Tier-1 rules (system-wide policy for all SeaBridgeAI coding agents — overrides this file for destructive actions, authorization, and cost controls). Non-suspendable.
-2. **Karpathy coding principles** (§above) — govern HOW every task executes. Always applied.
+1. **Hard safety rules** (Â§Safety above) + **`manageesg-backend/AGENTS_SYSTEM.md`** Tier-1 rules (system-wide policy for all SeaBridgeAI coding agents â€” overrides this file for destructive actions, authorization, and cost controls). Non-suspendable.
+2. **Karpathy coding principles** (Â§above) â€” govern HOW every task executes. Always applied.
 3. Session instructions from the user
 4. This AGENTS.md
 5. ECC Codex AGENTS.md
@@ -109,7 +146,7 @@ chub get ecc/core-codex      # Codex-specific ECC guidance
 
 ## Documentation
 
-For external libraries (PyTorch, etc.), use the `context7` MCP tool (Note: Context7 is not registered in `.mcp.json` Ã¢â‚¬â€ only Berry is active. Use web search as fallback for external docs.) or `chub get <provider>/<topic>`.
+For external libraries (PyTorch, etc.), use the `context7` MCP tool (Note: Context7 is not registered in `.mcp.json` ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â only Berry is active. Use web search as fallback for external docs.) or `chub get <provider>/<topic>`.
 
 ## IDE Support
 
@@ -234,16 +271,16 @@ Storage path:
 
 ## ai-coscientist
 
-> **ARCHIVED** — Output feeds nowhere automatically in the current pipeline. Feynman covers the research brief; Paper2Agent covers methodology extraction. Archived at `autoresearch/archived/AI-CoScientist/`. Do not invoke unless a structured hypothesis-ranking step is explicitly added to the workflow.
+> **ARCHIVED** â€” Output feeds nowhere automatically in the current pipeline. Feynman covers the research brief; Paper2Agent covers methodology extraction. Archived at `autoresearch/archived/AI-CoScientist/`. Do not invoke unless a structured hypothesis-ranking step is explicitly added to the workflow.
 
 ## rtk
 
-RTK (Rust Token Killer) v0.35.0 is installed and active. It proxies shell commands to produce compressed, LLM-optimized output, reducing token consumption by 60�90% on verbose commands.
+RTK (Rust Token Killer) v0.35.0 is installed and active. It proxies shell commands to produce compressed, LLM-optimized output, reducing token consumption by 60ï¿½90% on verbose commands.
 
 Binary: `C:\Users\adelm\.local\bin\rtk.exe`
 Config: `C:\Users\adelm\AppData\Roaming\rtk\config.toml`
 
-Usage � prefix any shell command with `rtk`:
+Usage ï¿½ prefix any shell command with `rtk`:
 ```
 rtk git status
 rtk git diff HEAD~1
@@ -254,16 +291,16 @@ rtk pip install -r requirements.txt
 Scope: RTK only intercepts Bash/shell tool calls. It does NOT apply to built-in Read/Grep/Glob tools.
 
 Key RTK commands:
-- `rtk gain` � show token reduction statistics for the session
-- `rtk --version` � confirm binary is reachable
+- `rtk gain` ï¿½ show token reduction statistics for the session
+- `rtk --version` ï¿½ confirm binary is reachable
 
 
 
 ---
 
-## caveman — Token Compression
+## caveman â€” Token Compression
 
-Caveman compresses agent output ~65–75% using terse "caveman-style" prose that preserves full technical accuracy. Auto-activates via SessionStart hook after install.
+Caveman compresses agent output ~65â€“75% using terse "caveman-style" prose that preserves full technical accuracy. Auto-activates via SessionStart hook after install.
 
 **Reference:** `C:\Users\adelm\SeaBridgeAI\everything-claude-code\references\caveman\`
 
@@ -273,18 +310,18 @@ claude plugin marketplace add JuliusBrussee/caveman && claude plugin install cav
 ```
 
 Skills:
-- `/caveman` — activate compression (intensity: `lite` / `full` / `ultra` / `wenyan`)
-- `/caveman-commit` — terse commit messages
-- `/caveman-review` — one-line code reviews
-- `/caveman-compress` — compress CLAUDE.md ~46% to save input tokens every session
+- `/caveman` â€” activate compression (intensity: `lite` / `full` / `ultra` / `wenyan`)
+- `/caveman-commit` â€” terse commit messages
+- `/caveman-review` â€” one-line code reviews
+- `/caveman-compress` â€” compress CLAUDE.md ~46% to save input tokens every session
 
 Codex: use `$caveman` in prompts. Gemini: `gemini extensions install caveman`.
 
 ---
 
-## codeburn — Token Usage Dashboard
+## codeburn â€” Token Usage Dashboard
 
-Codeburn tracks AI coding token spend across Claude Code, Codex, Cursor, and others. Reads session data from disk — no API keys needed.
+Codeburn tracks AI coding token spend across Claude Code, Codex, Cursor, and others. Reads session data from disk â€” no API keys needed.
 
 **Reference:** `C:\Users\adelm\SeaBridgeAI\everything-claude-code\references\codeburn\`
 
