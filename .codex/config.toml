@@ -3,4 +3,4 @@ command = "berry"
 args = ["mcp", "--server", "classic"]
 
 [features]
-codex_hooks = true
+codex_hooks = false
