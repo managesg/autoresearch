@@ -1,4 +1,4 @@
-ï»¿<!-- SEABRIDGE_GOAL_PROTOCOL_START -->
+<!-- SEABRIDGE_GOAL_PROTOCOL_START -->
 ## /goal Default Operating Mode
 
 All SeaBridgeAI coding-agent tasks default to /goal.
@@ -38,7 +38,7 @@ Never authorize deletion of repositories, source folders, databases, or infrastr
 5. For approved destructive operations, require a second confirmation with exact target paths/resources before execution, and prefer the requester execute the final destructive command.
 6. Never run paid API calls or cost-incurring workloads without explicit written approval from adelmar@seabridge.ai.
 7. Use the team-shared authorization password from your secure internal channel when approval is required; never store that password in code, docs, logs, or commits.
-# AutoResearch â€” Claude Code Instructions
+# AutoResearch — Claude Code Instructions
 
 ## SeaBridgeAI Cross-Agent Skill Contract
 
@@ -71,10 +71,10 @@ Autonomous ML training-loop experimentation. Modifies `experiments/train.py` to 
 
 ## Critical Rules
 
-- **Only edit `experiments/train.py`** â€” `experiments/prepare.py` is read-only, never touch it.
-- **Never stop the loop** â€” keep iterating until the user manually interrupts.
-- **Never install new packages** â€” only use what is already in `pyproject.toml`.
-- Each run: `uv run experiments/train.py > run.log 2>&1` â€” do NOT let output flood context.
+- **Only edit `experiments/train.py`** — `experiments/prepare.py` is read-only, never touch it.
+- **Never stop the loop** — keep iterating until the user manually interrupts.
+- **Never install new packages** — only use what is already in `pyproject.toml`.
+- Each run: `uv run experiments/train.py > run.log 2>&1` — do NOT let output flood context.
 - Log every result to `results.tsv` (TSV, not CSV). Do NOT commit `results.tsv`.
 - Branch convention: `autoresearch/<tag>` (e.g. `autoresearch/apr2`).
 
@@ -88,7 +88,7 @@ grep "^val_bpb:\|^peak_vram_mb:" run.log
 
 ## Workflow Summary
 
-1. Establish baseline (first run â€” no changes).
+1. Establish baseline (first run — no changes).
 2. Propose change to `experiments/train.py`, commit, run, record.
 3. If `val_bpb` improved ? keep commit (advance branch).
 4. If equal or worse ? `git reset --hard HEAD~1` (discard).
@@ -98,7 +98,7 @@ grep "^val_bpb:\|^peak_vram_mb:" run.log
 
 This repo inherits the full Everything Claude Code (ECC) governing layer:
 
-- **Rules**: `~/.claude/rules/` (always active â€” coding style, security, testing, git workflow)
+- **Rules**: `~/.claude/rules/` (always active — coding style, security, testing, git workflow)
 - **Agents**: `~/.claude/agents/` (planner, tdd-guide, code-reviewer, security-reviewer, etc.)
 - **Skills**: `~/.claude/skills/` + `C:/Users/adelm/SeaBridgeAI/everything-claude-code/.claude/skills/`
 
@@ -113,8 +113,8 @@ chub get ecc/core-overview
 
 Berry MCP is available in this repo (`.mcp.json`). Use it before committing to any experimental hypothesis:
 
-- `audit_trace_budget` â€” verify that your experimental plan (hypothesis ? change ? expected outcome) has evidence before running
-- `detect_hallucination` â€” verify any factual claim about architecture behavior (e.g., "GeLU will outperform ReLU here because...")
+- `audit_trace_budget` — verify that your experimental plan (hypothesis ? change ? expected outcome) has evidence before running
+- `detect_hallucination` — verify any factual claim about architecture behavior (e.g., "GeLU will outperform ReLU here because...")
 
 **When proposing a new experiment**:
 1. `start_run("hypothesis: <change description>")` 
@@ -129,11 +129,11 @@ Curated collection of 200+ LLM/agent example apps (LangChain, LangGraph, CrewAI,
 **Canonical location:** `C:\Users\adelm\SeaBridgeAI\everything-claude-code\references\awesome-llm-apps`
 **Pointer:** `references/awesome-llm-apps.md` (this repo)
 
-Reference-only â€” port patterns, never copy code or auto-run examples.
+Reference-only — port patterns, never copy code or auto-run examples.
 
 ## Context7 for External Docs
 
-Use Context7 MCP for any external library (PyTorch, Triton, etc.) (not configured locally â€” only Berry is active in `.mcp.json`. Use web search as fallback for external docs.):
+Use Context7 MCP for any external library (PyTorch, Triton, etc.) (not configured locally — only Berry is active in `.mcp.json`. Use web search as fallback for external docs.):
 
 ```
 Use context7 to fetch the latest PyTorch optimizer docs
@@ -162,11 +162,11 @@ Handoff artifacts (outputs, logs, result snapshots) are written to `manageesg-ba
 **This repo owns only `experiments/train.py`, `program.md`, and `results.tsv`.** Everything else is either read-only (`experiments/prepare.py`) or consumed externally.
 
 Key files in this repo:
-- `experiments/train.py` â€” training script (the only file agents may edit)
-- `experiments/prepare.py` â€” data preparation (read-only)
-- `program.md` â€” full experiment loop specification
-- `results.tsv` â€” TSV log of all run results (do not commit)
-- `analysis.ipynb` â€” Jupyter notebook for analyzing experiment results and visualizing training curves
+- `experiments/train.py` — training script (the only file agents may edit)
+- `experiments/prepare.py` — data preparation (read-only)
+- `program.md` — full experiment loop specification
+- `results.tsv` — TSV log of all run results (do not commit)
+- `analysis.ipynb` — Jupyter notebook for analyzing experiment results and visualizing training curves
 
 ## IDE Support
 
@@ -282,8 +282,8 @@ Rules:
 
 Two tools are installed globally for token efficiency:
 
-- **caveman** â€” compresses agent output ~65â€“75% (`/caveman` skill, `claude plugin install caveman@caveman`). Reference: `everything-claude-code/references/caveman/`
-- **codeburn** â€” token usage dashboard (`npx codeburn` or `npm install -g codeburn`). Reference: `everything-claude-code/references/codeburn/`
+- **caveman** — compresses agent output ~65–75% (`/caveman` skill, `claude plugin install caveman@caveman`). Reference: `everything-claude-code/references/caveman/`
+- **codeburn** — token usage dashboard (`npx codeburn`; global install requires explicit approval). Reference: `everything-claude-code/references/codeburn/`
 
 
 ## SeaBridgeAI Agent Baseline
