@@ -1,11 +1,11 @@
----
+﻿---
 name: modal-compute
 description: Run GPU workloads on Modal's serverless infrastructure. Use when the user needs remote GPU compute for training, inference, benchmarks, or batch processing and Modal CLI is available.
 ---
 
 # Modal Compute
 
-Use the `modal` CLI for serverless GPU workloads. No pod lifecycle to manage — write a decorated Python script and run it.
+Use the `modal` CLI for serverless GPU workloads. No pod lifecycle to manage â€” write a decorated Python script and run it.
 
 ## Setup
 
@@ -54,3 +54,11 @@ def main():
 - Stateless burst GPU jobs (training, inference, benchmarks)
 - No persistent state needed between runs
 - Check availability: `command -v modal`
+
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_START -->
+## /goal Inheritance
+
+This skill inherits the SeaBridgeAI `/goal` default protocol. Frame the work with a persistent goal, Definition of Done, validation plan, risks, dependencies, expected artifacts, and completion evidence. Do not claim completion until the DoD is validated or a hard blocker is documented.
+
+Canonical protocol: `C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_END -->

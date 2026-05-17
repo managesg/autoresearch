@@ -1,4 +1,4 @@
----
+﻿---
 name: alpha-research
 description: Search, read, and query research papers via the `alpha` CLI (alphaXiv-backed). Use when the user asks about academic papers, wants to find research on a topic, needs to read a specific paper, ask questions about a paper, inspect a paper's code repository, or manage paper annotations.
 ---
@@ -37,6 +37,14 @@ alpha annotate 2106.09685 "Key paper on LoRA - revisit for adapter comparison"
 
 ## When to use
 
-- Academic paper search, reading, Q&A → `alpha`
-- Current topics (products, releases, docs) → web search tools
-- Mixed topics → combine both
+- Academic paper search, reading, Q&A â†’ `alpha`
+- Current topics (products, releases, docs) â†’ web search tools
+- Mixed topics â†’ combine both
+
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_START -->
+## /goal Inheritance
+
+This skill inherits the SeaBridgeAI `/goal` default protocol. Frame the work with a persistent goal, Definition of Done, validation plan, risks, dependencies, expected artifacts, and completion evidence. Do not claim completion until the DoD is validated or a hard blocker is documented.
+
+Canonical protocol: `C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_END -->

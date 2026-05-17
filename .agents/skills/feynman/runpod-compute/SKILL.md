@@ -1,4 +1,4 @@
----
+﻿---
 name: runpod-compute
 description: Provision and manage GPU pods on RunPod for long-running experiments. Use when the user needs persistent GPU compute with SSH access, large datasets, or multi-step experiments.
 ---
@@ -46,3 +46,11 @@ Get connection details from `runpodctl get pod <id>`. Pods must expose port `22/
 - Multi-step work with SSH access between iterations
 - Always stop or remove pods after experiments
 - Check availability: `command -v runpodctl`
+
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_START -->
+## /goal Inheritance
+
+This skill inherits the SeaBridgeAI `/goal` default protocol. Frame the work with a persistent goal, Definition of Done, validation plan, risks, dependencies, expected artifacts, and completion evidence. Do not claim completion until the DoD is validated or a hard blocker is documented.
+
+Canonical protocol: `C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_END -->

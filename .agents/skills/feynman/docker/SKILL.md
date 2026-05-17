@@ -1,4 +1,4 @@
----
+﻿---
 name: docker
 description: Execute research code inside isolated Docker containers for safe replication, experiments, and benchmarks. Use when the user selects Docker as the execution environment or asks to run code safely, in isolation, or in a sandbox.
 allowed-tools: Bash(docker:*)
@@ -80,5 +80,13 @@ docker stop <name> && docker rm <name>
 ## Notes
 
 - The mounted workspace syncs results back to the host automatically
-- Containers are network-enabled by default — add `--network none` for full isolation
+- Containers are network-enabled by default â€” add `--network none` for full isolation
 - For GPU access, Docker must be configured with the NVIDIA Container Toolkit
+
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_START -->
+## /goal Inheritance
+
+This skill inherits the SeaBridgeAI `/goal` default protocol. Frame the work with a persistent goal, Definition of Done, validation plan, risks, dependencies, expected artifacts, and completion evidence. Do not claim completion until the DoD is validated or a hard blocker is documented.
+
+Canonical protocol: `C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_END -->

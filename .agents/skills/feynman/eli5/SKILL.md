@@ -1,4 +1,4 @@
----
+﻿---
 name: eli5
 description: Explain research, papers, or technical ideas in plain English with minimal jargon, concrete analogies, and clear takeaways. Use when the user says "ELI5 this", asks for a simple explanation of a paper or research result, wants jargon removed, or asks what something technically dense actually means.
 ---
@@ -23,3 +23,11 @@ Guidelines:
 - Prefer one good analogy over several weak ones.
 - Separate what the paper actually shows from speculation or interpretation.
 - Keep the explanation inline unless the user explicitly asks to save it as an artifact.
+
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_START -->
+## /goal Inheritance
+
+This skill inherits the SeaBridgeAI `/goal` default protocol. Frame the work with a persistent goal, Definition of Done, validation plan, risks, dependencies, expected artifacts, and completion evidence. Do not claim completion until the DoD is validated or a hard blocker is documented.
+
+Canonical protocol: `C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_END -->

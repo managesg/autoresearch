@@ -1,4 +1,4 @@
-## Safety And Authorization Rule
+﻿## Safety And Authorization Rule
 
 Never authorize deletion of repositories, source folders, databases, or infrastructure under any circumstances.
 
@@ -27,7 +27,7 @@ CLI-Anything is a workflow/tooling set that generates **agent-native CLIs** for 
 
 Use this skill when you need predictable agent behavior around:
 - External/non-API tools (GUIs, legacy apps, vendor CLIs, converters)
-- Reproducible â€œrun â†’ artifact â†’ verifyâ€ pipelines
+- Reproducible Ã¢â‚¬Å“run Ã¢â€ â€™ artifact Ã¢â€ â€™ verifyÃ¢â‚¬Â pipelines
 - Regression harnesses where exit-code alone is insufficient
 
 ## When NOT to Use
@@ -80,7 +80,7 @@ cli-anything-<software>     # enters REPL mode
 If you have access to CLI-Hub meta-skill, use it to:
 - browse the live harness catalog
 - install the best matching harness
-- read that harnessâ€™s own `SKILL.md`
+- read that harnessÃ¢â‚¬â„¢s own `SKILL.md`
 
 (See upstream CLI-Anything docs for the current CLI-Hub entrypoint.)
 
@@ -88,10 +88,18 @@ If you have access to CLI-Hub meta-skill, use it to:
 
 - Prefer wrapping flaky/external steps behind a CLI contract so pipelines become replayable.
 - Capture inputs/outputs as files and verify outputs (magic bytes, schema validity, checksums, expected counts).
-- Keep agent instructions narrow: â€œcall the CLI with `--json`, parse JSON, fail fast on non-zero exits.â€
+- Keep agent instructions narrow: Ã¢â‚¬Å“call the CLI with `--json`, parse JSON, fail fast on non-zero exits.Ã¢â‚¬Â
 
 ## Safety / Constraints
 
 - Do not run generated harnesses against proprietary repos or secrets without explicit approval.
 - On Windows, some plugin flows expect a bash-like environment; prefer Git for Windows bash or WSL if needed.
 - Treat the generated CLI as an untrusted boundary: validate JSON and sanitize paths/args.
+
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_START -->
+## /goal Inheritance
+
+This skill inherits the SeaBridgeAI `/goal` default protocol. Frame the work with a persistent goal, Definition of Done, validation plan, risks, dependencies, expected artifacts, and completion evidence. Do not claim completion until the DoD is validated or a hard blocker is documented.
+
+Canonical protocol: `C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_END -->

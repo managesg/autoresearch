@@ -1,4 +1,4 @@
----
+﻿---
 name: contributing
 description: Contribute changes to the Feynman repository itself. Use when the task is to add features, fix bugs, update prompts or skills, change install or release behavior, improve docs, or prepare a focused PR against this repo.
 ---
@@ -26,3 +26,11 @@ npm run build
 If the docs site changed, also validate `website/`.
 
 When changing release-sensitive behavior, verify that `.nvmrc`, package `engines`, runtime guards, and install docs stay aligned.
+
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_START -->
+## /goal Inheritance
+
+This skill inherits the SeaBridgeAI `/goal` default protocol. Frame the work with a persistent goal, Definition of Done, validation plan, risks, dependencies, expected artifacts, and completion evidence. Do not claim completion until the DoD is validated or a hard blocker is documented.
+
+Canonical protocol: `C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
+<!-- SEABRIDGE_GOAL_SKILL_INHERITANCE_END -->
