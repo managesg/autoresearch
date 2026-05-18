@@ -25,6 +25,17 @@ Use the central system above as the source of truth for reusable skills, workflo
 
 Shared skills, Harness Engineering, Agent Shield, and Strix are inherited from ECC. Load ECC `AGENT_SKILLS.md` for `grill-me`, `ubiquitous-language`, `improve-codebase-architecture`, `sea-*` skills, and Harness reviewer skills. Load ECC `docs/harness/HARNESS_ENGINEERING.md` and `scripts/check-harness.ps1` for baseline-aware guardrails. Full vulnerability scans must use the approved ECC wrapper so Agent Shield and Strix run together only on approved local/staging scope.
 
+## Instruction File Architecture
+
+Authoritative AutoResearch instruction files:
+
+1. `AGENTS_SYSTEM.md` - cross-agent AutoResearch operating system, safety, workspace, and research/tool-running boundaries.
+2. `AGENTS.md` - generic/Codex-style execution instructions.
+3. `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, and `OPENCODE.md` - thin per-agent adapters where tooling benefits from explicit files.
+4. ECC `SEABRIDGE_CODING_AGENT_SYSTEM.md` and `AGENT_SKILLS.md` - canonical reusable skills, workflows, and shared governance.
+
+Do not recreate repo-local `AGENT.md` or `AGENT_SKILLS.md`. Tools should load the standard files above. Source-owned Feynman, Graphify, and research-tool skills may remain with their source tools unless intentionally promoted into ECC.
+
 Before non-trivial work, load:
 
 - `C:\Users\adelm\SeaBridgeAI\everything-claude-code\SEABRIDGE_CODING_AGENT_SYSTEM.md`

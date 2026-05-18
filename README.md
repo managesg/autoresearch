@@ -235,6 +235,16 @@ I think these would be the reasonable hyperparameters to play with. Ask your fav
 - [jsegov/autoresearch-win-rtx](https://github.com/jsegov/autoresearch-win-rtx) (Windows)
 - [andyluo7/autoresearch](https://github.com/andyluo7/autoresearch) (AMD)
 
+## Coding Agent Instructions
+
+AutoResearch coding-agent guidance uses `AGENTS_SYSTEM.md` plus thin per-agent adapters:
+
+- `AGENTS.md` - generic/Codex-style research instructions.
+- `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, `OPENCODE.md` - per-agent adapters with the shared `/goal` protocol.
+- `AGENTS_SYSTEM.md` - cross-agent AutoResearch operating rules, safety, and research/tool-running boundaries.
+
+Reusable coding-agent skills and workflows live in `C:\Users\adelm\SeaBridgeAI\everything-claude-code`. Do not recreate repo-local `AGENT.md` or `AGENT_SKILLS.md`. Source-owned Feynman, Graphify, and research-tool skills may remain with their source tools unless intentionally promoted into ECC.
+
 ## License
 
 MIT
