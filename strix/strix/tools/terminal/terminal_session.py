@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 import time
 import uuid
@@ -149,6 +150,22 @@ class TerminalSession:
             or self._is_navigation_or_special_key(_command)
             or self._is_complex_modifier_key(_command)
         )
+
+    # Destructive-command denylist. Defense-in-depth on top of sandbox isolation;
+    # blocks irreversible host damage unless STRIX_ALLOW_DESTRUCTIVE=true.
+    _DESTRUCTIVE_PATTERNS = [
+        r"\brm\s+-[^\s]*f",
+        r"\brm\s+--force",
+        r"\bdd\s+if=",
+        r"\bmkfs\b",
+        r"\bshred\b",
+        r">\s*/dev/[sh]d[a-z]",
+        r"\bcurl\s+[^|]+\|\s*(ba)?sh\b",
+        r"\bwget\s+[^|]+\|\s*(ba)?sh\b",
+        r"\bchmod\s+[0-7]*7\s+/",
+        r"\bsudo\s+rm\s+-[^\s]*r",
+        r":\s*\(\s*\)\s*\{",
+    ]
 
     def _matches_ps1_metadata(self, content: str) -> list[re.Match[str]]:
         return list(re.finditer(self.PS1_PATTERN + r"\]\$ ", content))
@@ -317,6 +334,13 @@ class TerminalSession:
         last_pane_output = initial_pane_output
 
         is_special_key = self._is_special_key(command)
+        if not is_special_key and os.getenv("STRIX_ALLOW_DESTRUCTIVE", "false").lower() != "true":
+            for pattern in self._DESTRUCTIVE_PATTERNS:
+                if re.search(pattern, command):
+                    raise RuntimeError(
+                        "Blocked: command matches a destructive pattern. "
+                        "Set STRIX_ALLOW_DESTRUCTIVE=true to override."
+                    )
         should_add_enter = not is_special_key and not no_enter
         self.pane.send_keys(command, enter=should_add_enter)
 
