@@ -214,7 +214,7 @@ from graphify.report  import generate
 from graphify.export  import to_json
 
 print(f'[graphify] Detecting files in {repo_path}')
-manifest = detect(str(repo_path))
+manifest = detect(repo_path)
 
 print(f'[graphify] Extracting AST (code-only, no LLM)')
 files = collect_files(manifest, include_docs=False, include_papers=False, include_images=False)
