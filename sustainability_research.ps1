@@ -84,16 +84,13 @@ function Invoke-Feynman {
         Write-Host "  Check that feynman/ is cloned under the autoresearch root." -ForegroundColor Yellow
         return
     }
-    if ($Deep) {
-        $cmd = "powershell -ExecutionPolicy Bypass -File `"$feynmanScript`" `"$Query`" --deep-research"
-    } else {
-        $cmd = "powershell -ExecutionPolicy Bypass -File `"$feynmanScript`" `"$Query`""
-    }
+    $psArgs = @("-ExecutionPolicy", "Bypass", "-File", $feynmanScript, $Query)
+    if ($Deep) { $psArgs += "--deep-research" }
     if ($DryRun) {
-        Write-DryRun $cmd
+        Write-DryRun ("powershell " + ($psArgs -join " "))
     } else {
         Write-Host "  Running Feynman research..." -ForegroundColor Green
-        Invoke-Expression $cmd
+        & powershell @psArgs
     }
 }
 
@@ -105,11 +102,11 @@ function Invoke-Paper2Agent {
         return
     }
     Confirm-CostGate -Tool "Paper2Agent" -CostEstimate "`$2-10 (30 min - 3 hrs)"
-    $cmd = "powershell -ExecutionPolicy Bypass -File `"$script`" -ProjectDir `"$ProjectDir`" -GithubUrl `"$GithubUrl`""
+    $psArgs = @("-ExecutionPolicy", "Bypass", "-File", $script, "-ProjectDir", $ProjectDir, "-GithubUrl", $GithubUrl)
     if ($DryRun) {
-        Write-DryRun $cmd
+        Write-DryRun ("powershell " + ($psArgs -join " "))
     } else {
-        Invoke-Expression $cmd
+        & powershell @psArgs
     }
 }
 
@@ -177,12 +174,21 @@ function Run-ScenarioB {
 
     Write-Step "B2" "Build codebase knowledge graph (Graphify)"
     $graphifyScript = Join-Path $ScriptDir "graphify.ps1"
-    $graphifyCmd = "powershell -ExecutionPolicy Bypass -File `"$graphifyScript`" query `"show the relevant agent architecture and data flow`" --graph graphify-out/graph.json"
+    $graphifyArgs = @(
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        $graphifyScript,
+        "query",
+        "show the relevant agent architecture and data flow",
+        "--graph",
+        "graphify-out/graph.json"
+    )
     if ($DryRun) {
-        Write-DryRun $graphifyCmd
+        Write-DryRun ("powershell " + ($graphifyArgs -join " "))
     } elseif (Test-Path $graphifyScript) {
         Write-Host "  Running Graphify..." -ForegroundColor Green
-        Invoke-Expression $graphifyCmd
+        & powershell @graphifyArgs
     } else {
         Write-Host "  graphify.ps1 not found - skipping Graphify step." -ForegroundColor Yellow
         Write-Host "  Read graphify-out/GRAPH_REPORT.md manually if available." -ForegroundColor Yellow

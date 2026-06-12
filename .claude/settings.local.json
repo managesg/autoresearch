@@ -1,18 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(MSYS_NO_PATHCONV=1 wsl:*)",
-      "Bash(wsl -d Ubuntu -- bash -c ':*)",
       "Bash(echo \"install started in background PID=$!\")",
       "Bash(nvidia-smi)",
-      "Bash(cmd.exe /c \"nvidia-smi\")",
-      "Bash(cmd.exe:*)",
-      "Bash(powershell.exe:*)",
-      "Bash(powershell:*)",
-      "Bash(wsl:*)",
       "Bash(set MSYS_NO_PATHCONV=1)",
-      "Bash(grep -r \"NEXT_PUBLIC_API\" /c/Users/adelm/SeaBridgeAI/manageesg-frontend/.env*)",
-      "Bash(cat /c/Users/adelm/SeaBridgeAI/manageesg-backend/.env*)",
       "Bash(xargs grep:*)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:api.github.com)",
@@ -29,9 +20,13 @@
       "Bash(git checkout:*)",
       "Bash(git pull:*)",
       "Bash(git merge:*)"
+    ],
+    "deny": [
+      "Read(**/.env*)",
+      "Bash(cat *.env*)"
     ]
   },
-  "enableAllProjectMcpServers": true,
+  "enableAllProjectMcpServers": false,
   "enabledMcpjsonServers": [
     "berry"
   ]
