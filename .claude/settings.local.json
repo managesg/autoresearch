@@ -15,11 +15,8 @@
       "Bash(sed -n '24,36p' seabridge_ai/pyproject.toml)",
       "Bash(sed -n '61,72p' seabridge_ai/pyproject.toml)",
       "Bash(GIT_EDITOR=true git rebase --continue)",
-      "Bash(git push:*)",
-      "Bash(gh pr:*)",
       "Bash(git checkout:*)",
-      "Bash(git pull:*)",
-      "Bash(git merge:*)"
+      "Bash(git pull:*)"
     ],
     "deny": [
       "Read(**/.env*)",
