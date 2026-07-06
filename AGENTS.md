@@ -78,7 +78,7 @@ Autonomous ML training-loop experimentation. Modifies `experiments/train.py` to 
 - **No new packages** — only dependencies already in `pyproject.toml` are allowed.
 - Each run: `uv run experiments/train.py > run.log 2>&1`
 - Record every result in `results.tsv` (tab-separated). Do NOT commit `results.tsv`.
-- Branch convention: `autoresearch/<tag>`.
+- Branch convention: `autoresearch/<tag>`, cut from and merged back to the base branch `master`.
 
 ## Metric
 
