@@ -154,15 +154,15 @@ class TerminalSession:
     # Destructive-command denylist. Defense-in-depth on top of sandbox isolation;
     # blocks irreversible host damage unless STRIX_ALLOW_DESTRUCTIVE=true.
     _DESTRUCTIVE_PATTERNS = [
-        r"\brm\s+-[^\s]*f",
-        r"\brm\s+--force",
-        r"\bdd\s+if=",
+        r"\brm\s+-[^\s]*[rf]",  # any recursive or force delete
+        r"\brm\s+--(force|recursive)",
+        r"\bdd\s+(if|of)=",
         r"\bmkfs\b",
         r"\bshred\b",
-        r">\s*/dev/[sh]d[a-z]",
+        r">\s*/dev/(nvme\d+n\d+(p\d+)?|[sh]d[a-z]\d*|mmcblk\d+)",
         r"\bcurl\s+[^|]+\|\s*(ba)?sh\b",
         r"\bwget\s+[^|]+\|\s*(ba)?sh\b",
-        r"\bchmod\s+[0-7]*7\s+/",
+        r"\bchmod\s+(-\S+\s+)*[0-7]*7\s+/",  # tolerate flags like -R before the mode
         r"\bsudo\s+rm\s+-[^\s]*r",
         r":\s*\(\s*\)\s*\{",
     ]

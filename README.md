@@ -37,6 +37,7 @@ This repo contains two things that share the same directory:
 | **Graphify** | `graphify/` | Build and query knowledge graphs from repo source code | `co-scientist-orchestrator.ps1 -Action build-graphs` |
 | **Unsloth** | `unsloth/` | Fine-tuning and model optimization utilities | See `unsloth/README.md` |
 | **Streamlit UI** | `app.py` | Two-phase research UI: Feynman → Paper2Agent | `run_ui.ps1` (port 8501) |
+| **Terrabit** | `terrabit/` | Standalone satellite-embedding search tool (Clay v1.5 / Sentinel-2); reference only — not wired into the co-scientist stack or any orchestrator | See `terrabit/` |
 
 ### Archived / Deleted Tools
 
@@ -162,11 +163,11 @@ The idea: give an AI agent a small but real LLM training setup and let it experi
 
 The repo is deliberately kept small and only really has three files that matter:
 
-- **`prepare.py`** Ã¢â‚¬â€ fixed constants, one-time data prep (downloads training data, trains a BPE tokenizer), and runtime utilities (dataloader, evaluation). Not modified.
-- **`train.py`** Ã¢â‚¬â€ the single file the agent edits. Contains the full GPT model, optimizer (Muon + AdamW), and training loop. Everything is fair game: architecture, hyperparameters, optimizer, batch size, etc. **This file is edited and iterated on by the agent**.
-- **`program.md`** Ã¢â‚¬â€ baseline instructions for one agent. Point your agent here and let it go. **This file is edited and iterated on by the human**.
+- **`prepare.py`** — fixed constants, one-time data prep (downloads training data, trains a BPE tokenizer), and runtime utilities (dataloader, evaluation). Not modified.
+- **`train.py`** — the single file the agent edits. Contains the full GPT model, optimizer (Muon + AdamW), and training loop. Everything is fair game: architecture, hyperparameters, optimizer, batch size, etc. **This file is edited and iterated on by the agent**.
+- **`program.md`** — baseline instructions for one agent. Point your agent here and let it go. **This file is edited and iterated on by the human**.
 
-By design, training runs for a **fixed 5-minute time budget** (wall clock, excluding startup/compilation), regardless of the details of your compute. The metric is **val_bpb** (validation bits per byte) Ã¢â‚¬â€ lower is better, and vocab-size-independent so architectural changes are fairly compared.
+By design, training runs for a **fixed 5-minute time budget** (wall clock, excluding startup/compilation), regardless of the details of your compute. The metric is **val_bpb** (validation bits per byte) — lower is better, and vocab-size-independent so architectural changes are fairly compared.
 
 If you are new to neural networks, this ["Dummy's Guide"](https://x.com/hooeem/status/2030720614752039185) looks pretty good for a lot more context.
 
@@ -204,10 +205,10 @@ The `program.md` file is essentially a super lightweight "skill".
 ## Project structure
 
 ```
-prepare.py      Ã¢â‚¬â€ constants, data prep + runtime utilities (do not modify)
-train.py        Ã¢â‚¬â€ model, optimizer, training loop (agent modifies this)
-program.md      Ã¢â‚¬â€ agent instructions
-pyproject.toml  Ã¢â‚¬â€ dependencies
+prepare.py      — constants, data prep + runtime utilities (do not modify)
+train.py        — model, optimizer, training loop (agent modifies this)
+program.md      — agent instructions
+pyproject.toml  — dependencies
 ```
 
 ## Design choices
