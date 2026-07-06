@@ -25,18 +25,22 @@ Timeout/stagnation rule: if a command or approach fails twice, do not repeat it 
 
 <!-- SEABRIDGE_GOAL_PROTOCOL_END -->
 
+<!-- SEABRIDGE_SAFETY_RULE_START -->
 ## Safety And Authorization Rule
 
 Never authorize deletion of repositories, source folders, databases, or infrastructure under any circumstances.
 
-1. Session authorization gate: at session start, request authorization through the team-approved secure channel before any write, destructive, or cost-incurring action.
+> **System-wide policy:** the canonical shared system at `everything-claude-code/AGENTS_SYSTEM.md` (mirrored locally as `AGENTS_SYSTEM.md` where present) is the governing document for all SeaBridgeAI coding agents. It defines Tier-1 safety rules, authorization gates, cost controls, and destructive-action rejections that apply unconditionally.
+
+1. Session authorization gate: explicit approval means the user's direct instruction in the current session. Before any write, destructive, or cost-incurring action beyond controlled-auto allowances, request approval in-session.
 2. Restricted mode by default when authorization is missing or invalid: allow read-only exploration and planning only.
 3. Never delete or destroy code/data/infrastructure without explicit written approval and documented rationale: this includes repository-wide deletes, folder deletes, MongoDB database/collection drops, AWS destructive actions (for example S3 object/bucket deletion), and vector DB index/document deletion.
 4. Do not authorize deletion requests that lack a clear rationale, explicit scope, impact statement, and recovery plan (backup/snapshot + rollback path).
 5. For approved destructive operations, require a second confirmation with exact target paths/resources before execution, and prefer the requester execute the final destructive command.
 6. Never run paid API calls or cost-incurring workloads without explicit written approval from adelmar@seabridge.ai.
-7. Use the team-shared authorization password from your secure internal channel when approval is required; never store that password in code, docs, logs, or commits.
-# AutoResearch � Codex Instructions
+7. Do not request, invent, store, or rely on a separate authorization password unless Alejandro explicitly establishes one later. Never store secrets in code, docs, logs, or commits.
+<!-- SEABRIDGE_SAFETY_RULE_END -->
+# AutoResearch — Codex Instructions
 
 ## SeaBridgeAI Cross-Agent Skill Contract
 
@@ -53,7 +57,7 @@ boundaries here.
 
 For non-trivial AutoResearch work, `/goal` is the default operating contract.
 Load ECC `goal-default` and
-`C:\Users\adelm\SeaBridgeAI\everything-claude-code\docs\GOAL_PROTOCOL_DEFAULT.md`
+`C:\Users\adelm\SeaBridgeAI\everything-claude-code\protocols\GOAL_PROTOCOL.md`
 to frame the request with Definition of Done, validation plan, risks,
 dependencies, scope, blockers, and artifacts, then continue until validated or
 blocked. It does not override experiment-loop constraints, cost gates, or
@@ -69,9 +73,9 @@ Autonomous ML training-loop experimentation. Modifies `experiments/train.py` to 
 
 ## Critical Rules
 
-- **Only edit `experiments/train.py`** Ã¢â‚¬â€ `experiments/prepare.py` is read-only, never modify it.
-- **Never stop the loop** Ã¢â‚¬â€ iterate autonomously until manually interrupted.
-- **No new packages** Ã¢â‚¬â€ only dependencies already in `pyproject.toml` are allowed.
+- **Only edit `experiments/train.py`** — `experiments/prepare.py` is read-only, never modify it.
+- **Never stop the loop** — within a user-started `experiments/train.py` session, iterate autonomously until manually interrupted. Applies only to this experiment loop, never to general coding work.
+- **No new packages** — only dependencies already in `pyproject.toml` are allowed.
 - Each run: `uv run experiments/train.py > run.log 2>&1`
 - Record every result in `results.tsv` (tab-separated). Do NOT commit `results.tsv`.
 - Branch convention: `autoresearch/<tag>`.
@@ -84,13 +88,13 @@ Lower `val_bpb` wins. Extract:
 grep "^val_bpb:\|^peak_vram_mb:" run.log
 ```
 
-If empty Ã¢â€ â€™ run crashed. Read `tail -n 50 run.log` for the stack trace.
+If empty → run crashed. Read `tail -n 50 run.log` for the stack trace.
 
 ## Experiment Loop
 
 1. Baseline: run `experiments/train.py` unmodified, record result.
-2. Propose change Ã¢â€ â€™ edit `experiments/train.py` Ã¢â€ â€™ `git commit` Ã¢â€ â€™ `uv run experiments/train.py > run.log 2>&1`
-3. Improved (`val_bpb` lower) Ã¢â€ â€™ keep commit. Else Ã¢â€ â€™ `git reset --hard HEAD~1`.
+2. Propose change → edit `experiments/train.py` → `git commit` → `uv run experiments/train.py > run.log 2>&1`
+3. Improved (`val_bpb` lower) → keep commit. Else → `git reset --hard HEAD~1` (allowed only inside this experiment loop, on `autoresearch/<tag>` branches, against the loop's own just-made commit).
 4. Go to 2.
 
 ## Governing ECC Instructions
@@ -125,14 +129,17 @@ Transform tasks into verifiable goals. State what "done" looks like and how you'
 
 ---
 
-**Instruction priority** (highest to lowest):
+**Instruction priority** (highest to lowest), consistent with the canonical
+precedence in ECC `AGENTS_SYSTEM.md` ("Instruction Precedence And Load Order"):
 
-1. **Hard safety rules** (§Safety above) + **`manageesg-backend/AGENTS_SYSTEM.md`** Tier-1 rules (system-wide policy for all SeaBridgeAI coding agents — overrides this file for destructive actions, authorization, and cost controls). Non-suspendable.
-2. **Karpathy coding principles** (§above) — govern HOW every task executes. Always applied.
-3. Session instructions from the user
-4. This AGENTS.md
-5. ECC Codex AGENTS.md
-6. program.md loop specification
+1. **Tier-1 hard safety rules** (§Safety above + repo-local **`AGENTS_SYSTEM.md`**, which defers to the canonical shared system at `everything-claude-code/AGENTS_SYSTEM.md`). Non-suspendable.
+2. Session instructions from the user (may relax anything except Tier-1).
+3. This AGENTS.md and repo-local overrides.
+4. ECC canonical files (`AGENTS_SYSTEM.md`, `SEABRIDGE_CODING_AGENT_SYSTEM.md`, `AGENT_SKILLS.md`, `.codex/AGENTS.md`).
+5. program.md loop specification.
+
+Karpathy coding principles (§above) govern HOW every task executes; only the
+user may explicitly relax them for a specific task.
 
 ## Context Hub (chub)
 
@@ -146,7 +153,7 @@ chub get ecc/core-codex      # Codex-specific ECC guidance
 
 ## Documentation
 
-For external libraries (PyTorch, etc.), use the `context7` MCP tool (Note: Context7 is not registered in `.mcp.json` Ã¢â‚¬â€ only Berry is active. Use web search as fallback for external docs.) or `chub get <provider>/<topic>`.
+For external libraries (PyTorch, etc.), use the `context7` MCP tool (Note: Context7 is not registered in `.mcp.json` — only Berry is active. Use web search as fallback for external docs.) or `chub get <provider>/<topic>`.
 
 ## IDE Support
 
@@ -275,12 +282,12 @@ Storage path:
 
 ## rtk
 
-RTK (Rust Token Killer) v0.35.0 is installed and active. It proxies shell commands to produce compressed, LLM-optimized output, reducing token consumption by 60�90% on verbose commands.
+RTK (Rust Token Killer) v0.35.0 is installed and active. It proxies shell commands to produce compressed, LLM-optimized output, reducing token consumption by 60–90% on verbose commands.
 
 Binary: `C:\Users\adelm\.local\bin\rtk.exe`
 Config: `C:\Users\adelm\AppData\Roaming\rtk\config.toml`
 
-Usage � prefix any shell command with `rtk`:
+Usage — prefix any shell command with `rtk`:
 ```
 rtk git status
 rtk git diff HEAD~1
@@ -291,8 +298,8 @@ rtk pip install -r requirements.txt
 Scope: RTK only intercepts Bash/shell tool calls. It does NOT apply to built-in Read/Grep/Glob tools.
 
 Key RTK commands:
-- `rtk gain` � show token reduction statistics for the session
-- `rtk --version` � confirm binary is reachable
+- `rtk gain` — show token reduction statistics for the session
+- `rtk --version` — confirm binary is reachable
 
 
 
