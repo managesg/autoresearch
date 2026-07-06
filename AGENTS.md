@@ -107,7 +107,7 @@ This repo participates in the Everything Claude Code (ECC) multi-tool system:
 
 ## Karpathy Coding Principles (Always Applied)
 
-Permanent behavioral constraints governing HOW every task is executed. Not optional. Cannot be overridden by session instructions. Full reference: `everything-claude-code/.claude/skills/karpathy-guidelines/SKILL.md`
+Default behavioral constraints governing HOW every task is executed. Only the user may explicitly relax them for a specific task. Full reference: `everything-claude-code/.claude/skills/karpathy-guidelines/SKILL.md`
 
 ### 1. Think Before Coding
 State assumptions explicitly before acting. If two interpretations exist, present both and ask. If something is unclear, name it and stop — do not guess. Push back when a simpler approach exists.
