@@ -24,3 +24,7 @@ Transform tasks into verifiable goals. State what "done" looks like and how you'
 - [ ] Every planned line traces to a requirement?
 - [ ] Only touching what was requested?
 - [ ] Verifiable definition of "done" established?
+
+## Full Operating Contract
+
+These Karpathy principles are only part of the contract. Also read `AGENTS.md` and `AGENTS_SYSTEM.md` at the repo root for the full SeaBridgeAI operating contract: canonical precedence, Safety And Authorization Rule, skill-selection default, branch rules, /goal protocol, and approval gates (canonical source: `everything-claude-code/AGENTS_SYSTEM.md`).

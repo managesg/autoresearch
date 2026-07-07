@@ -40,6 +40,18 @@ Never authorize deletion of repositories, source folders, databases, or infrastr
 6. Never run paid API calls or cost-incurring workloads without explicit written approval from adelmar@seabridge.ai.
 7. Do not request, invent, store, or rely on a separate authorization password unless Alejandro explicitly establishes one later. Never store secrets in code, docs, logs, or commits.
 <!-- SEABRIDGE_SAFETY_RULE_END -->
+
+## Skill Selection Default
+
+Follow the ECC skill-selection default (`everything-claude-code/AGENTS_SYSTEM.md`):
+load at most ONE skill per task. A task is simple (no skill needed) when it
+touches at most 2 files, adds no dependency, and involves no
+auth/tenant/billing/migration/security/production-data/destructive/AI-grounding/
+provenance concern. When unsure which skill applies, load only `sea-skill-map`
+and follow its routing. Mandatory named triggers are never waived by this
+default: cross-repo changes always use `sea-cross-repo-handoff`, and
+done/fixed/production-ready claims always use
+`sea-verification-before-completion`.
 # AutoResearch — Claude Code Instructions
 
 ## SeaBridgeAI Cross-Agent Skill Contract
@@ -52,6 +64,11 @@ For non-trivial work, load local docs first, then ECC
 present, the smallest relevant `sea-*` skill, and the matching workflow/checklist.
 Keep reusable guidance in ECC and only AutoResearch/Feynman/Paper2Agent-specific
 boundaries here.
+
+Karpathy coding principles apply by default (think before coding, simplicity
+first, surgical changes, goal-driven execution); only the user may explicitly
+relax them. Full reference:
+`everything-claude-code/.claude/skills/karpathy-guidelines/SKILL.md`.
 
 ## Goal Protocol Default
 
