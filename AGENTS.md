@@ -117,27 +117,64 @@ This repo participates in the Everything Claude Code (ECC) multi-tool system:
 - Codex ECC layer: `C:/Users/adelm/SeaBridgeAI/everything-claude-code/.codex/AGENTS.md`
 - Shared rules: `~/.claude/rules/`
 
-## Karpathy Coding Principles (Always Applied)
+## Coding-Agent Principles (Always Applied)
 
-Default behavioral constraints governing HOW every task is executed. Only the user may explicitly relax them for a specific task. Full reference: `everything-claude-code/.claude/skills/karpathy-guidelines/SKILL.md`
+These are persistent behavioral guardrails, not optional skills, slash
+commands, or triggers. Active user/developer instructions define what to do;
+these principles govern how the work is executed across SeaBridgeAI agents —
+Claude, Codex, Gemini, OpenCode, local models, and delegated subagents alike.
+They are suspended only by direct higher-priority safety, system, or developer
+policy. Principles 5-8 form a five-gate execution discipline with principle 1:
+scope, gather evidence, reason adversarially, verify, report. Canonical copy:
+ECC `AGENTS_SYSTEM.md`. Full playbook:
+`everything-claude-code/.claude/skills/karpathy-guidelines/SKILL.md`.
 
-### 1. Think Before Coding
-State assumptions explicitly before acting. If two interpretations exist, present both and ask. If something is unclear, name it and stop — do not guess. Push back when a simpler approach exists.
+1. **Think Before Coding (scope first):** state assumptions, scope, affected
+   files and repos, ownership boundaries, and verification before acting on
+   non-trivial work. Name what must not be touched. If the request is
+   ambiguous, make one bounded, stated assumption or ask one focused question
+   before execution.
+2. **Simplicity First:** choose the smallest clear solution that satisfies the
+   task. Avoid speculative features, broad abstractions, and complexity that
+   the request does not require.
+3. **Surgical Changes:** touch only files and lines that trace directly to the
+   user's instruction. Mention unrelated issues instead of fixing them
+   unilaterally.
+4. **Goal-Driven Execution:** define success criteria and verification
+   evidence before implementation, then iterate until the goal is met or a
+   true blocker is documented.
+5. **Evidence Before Reasoning:** read available files, reports, tests, logs,
+   git history, source docs, and runtime state before relying on memory or
+   plausible assumptions. Remembered facts are hypotheses until verified. A
+   prompt implying that something exists is not evidence that it exists.
+6. **Adversarial Reasoning:** before implementing or recommending a plan, look
+   for ways it can fail — mandatory for cross-repo, security, tenant, data,
+   AI, architecture, or cleanup work: stale assumptions, dirty worktrees,
+   duplicate recent work, contract drift, generated artifacts, hidden
+   dependencies, branch safety, cost/quota risk, and unsafe approval paths.
+   Finding problems early beats a confident but brittle plan.
+7. **Verification Before Completion:** specify targeted checks before
+   claiming success. Run the smallest meaningful validation that proves the
+   claim first, then broaden when shared contracts, auth, tenant isolation,
+   AI/data, persistence, or user-facing behavior warrant it. Never claim
+   completion from code changes, summaries, or confidence alone.
+8. **Calibrated Reporting:** final reports must connect the work to the
+   request and separate facts from inference: files reviewed and changed,
+   commands run, evidence gathered, validation performed, skipped checks,
+   residual risks, approval gates, and the next useful action.
 
-### 2. Simplicity First
-Write the minimum code that solves the stated problem. No features, abstractions, or error handling beyond what was explicitly asked. If 200 lines could be 50, write 50. Test: would a senior engineer call this overcomplicated? If yes, simplify.
-
-### 3. Surgical Changes
-Touch only what the request requires. Do not improve adjacent code, comments, or formatting. Do not refactor unrelated things. Mention unrelated bugs — do not fix them unilaterally. Every changed line must trace directly to the user's request.
-
-### 4. Goal-Driven Execution
-Transform tasks into verifiable goals. State what "done" looks like and how you'll verify it (test output, curl, observable behavior). Strong success criteria enable autonomous looping; weak ones require constant clarification.
-
-**Before any implementation:**
-- [ ] Assumptions stated explicitly?
-- [ ] Every planned line traces to a requirement?
-- [ ] Only touching what was requested?
-- [ ] Verifiable definition of "done" established?
+- Prefer repository patterns over new abstractions.
+- Read first, then edit. Do not act from stale memory when files are available.
+- Evidence beats confidence. Never claim completion from code changes alone.
+- Preserve user work. Do not revert dirty files you did not create.
+- Spend reasoning effort deliberately: use low/medium effort for small,
+  well-scoped edits and simple inspection or search; reserve high/max effort
+  for orchestration, architecture, adversarial review, and high-risk
+  verification. Do not default to max effort — it is an escalation, not a
+  baseline. Delegate simple inspection and search to smaller or cheaper
+  agents when available. Provider routing and live/paid calls follow ECC
+  `AGENTS_SYSTEM.md`'s runtime-routing and guardrail rules; report the model,
+  effort tier, and provider used for any non-trivial task in the final report.
 
 ---
 
@@ -150,7 +187,7 @@ precedence in ECC `AGENTS_SYSTEM.md` ("Instruction Precedence And Load Order"):
 4. ECC canonical files (`AGENTS_SYSTEM.md`, `SEABRIDGE_CODING_AGENT_SYSTEM.md`, `AGENT_SKILLS.md`, `.codex/AGENTS.md`).
 5. program.md loop specification.
 
-Karpathy coding principles (§above) govern HOW every task executes; only the
+The Coding-Agent Principles (§above) govern HOW every task executes; only the
 user may explicitly relax them for a specific task.
 
 ## Context Hub (chub)

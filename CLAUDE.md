@@ -65,9 +65,11 @@ present, the smallest relevant `sea-*` skill, and the matching workflow/checklis
 Keep reusable guidance in ECC and only AutoResearch/Feynman/Paper2Agent-specific
 boundaries here.
 
-Karpathy coding principles apply by default (think before coding, simplicity
-first, surgical changes, goal-driven execution); only the user may explicitly
-relax them. Full reference:
+The Coding-Agent Principles apply by default (think before coding, simplicity
+first, surgical changes, goal-driven execution, and the five-gate execution
+discipline: evidence before reasoning, adversarial reasoning, verification
+before completion, calibrated reporting); only the user may explicitly relax
+them. Full reference:
 `everything-claude-code/.claude/skills/karpathy-guidelines/SKILL.md`.
 
 ## Goal Protocol Default

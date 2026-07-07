@@ -34,7 +34,7 @@ Authoritative AutoResearch instruction files:
 3. `CLAUDE.md`, `CODEX.md`, `GEMINI.md`, and `OPENCODE.md` - thin per-agent adapters where tooling benefits from explicit files.
 4. ECC `SEABRIDGE_CODING_AGENT_SYSTEM.md` and `AGENT_SKILLS.md` - canonical reusable skills, workflows, and shared governance.
 
-Do not recreate repo-local `AGENT.md` or `AGENT_SKILLS.md`. Tools should load the standard files above. Source-owned Feynman, Graphify, and research-tool skills may remain with their source tools unless intentionally promoted into ECC.
+Do not recreate repo-local `AGENT.md` or `AGENT_SKILLS.md`. Tools should load the standard files above. Feynman, Graphify, Paper2Agent, Strix, Terrabit, and the co-scientist-orchestrator dispatcher are intentionally promoted into ECC as canonical+wrapper skills (`feynman`, `graphify`, `paper2agent`, `strix`, `terrabit`, `co-scientist-orchestrator`); load those for command reference instead of re-deriving usage from source. Any other source-owned research-tool skill not listed here may remain with its source tool unless intentionally promoted into ECC.
 
 Before non-trivial work, load:
 
