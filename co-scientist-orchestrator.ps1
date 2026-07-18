@@ -205,7 +205,6 @@ repo_path = Path(sys.argv[1])
 out_dir   = Path(sys.argv[2])
 out_dir.mkdir(parents=True, exist_ok=True)
 
-from graphify.detect  import detect
 from graphify.extract import collect_files, extract
 from graphify.build   import build_from_json
 from graphify.cluster import cluster, score_all
@@ -213,24 +212,40 @@ from graphify.analyze import god_nodes, surprising_connections, suggest_question
 from graphify.report  import generate
 from graphify.export  import to_json
 
-print(f'[graphify] Detecting files in {repo_path}')
-manifest = detect(repo_path)
+# Current graphify API (the previous embedded pipeline pre-dated the refactor
+# and raised TypeError on every post-commit hook run):
+#   collect_files(target)                 -> list[Path]  (walks + filters itself)
+#   extract(paths)                        -> dict        (AST-only, no LLM arg)
+#   cluster(G)                            -> communities dict, does NOT return G
+#   score_all(G, communities)             -> cohesion scores dict
+#   to_json(G, communities, output_path)
+#   generate(G, communities, cohesion, labels, gods, surprises,
+#            detection_result, token_cost, root, suggested_questions=...)
+print(f'[graphify] Collecting code files in {repo_path}')
+files = collect_files(repo_path)
 
 print(f'[graphify] Extracting AST (code-only, no LLM)')
-files = collect_files(manifest, include_docs=False, include_papers=False, include_images=False)
-records = extract(files, use_llm=False)
+records = extract(files)
 
 print(f'[graphify] Building graph')
 G = build_from_json(records)
-G = cluster(G)
-G = score_all(G)
+communities = cluster(G)
+cohesion = score_all(G, communities)
+labels = {cid: f'Community {cid}' for cid in communities}
 
 graph_json = out_dir / 'graph.json'
-to_json(G, str(graph_json))
+to_json(G, communities, str(graph_json))
 print(f'[graphify] Graph saved -> {graph_json}')
 
+gods = god_nodes(G)
+surprises = surprising_connections(G, communities)
+questions = suggest_questions(G, communities, labels)
+detection = {'total_files': len(files), 'total_words': 0}
 report_md = out_dir / 'GRAPH_REPORT.md'
-report = generate(G, god_nodes(G), surprising_connections(G), suggest_questions(G))
+report = generate(
+    G, communities, cohesion, labels, gods, surprises,
+    detection, {}, str(repo_path), suggested_questions=questions,
+)
 report_md.write_text(report, encoding='utf-8')
 print(f'[graphify] Report saved -> {report_md}')
 "@ "$repoPath" "$outDir"
