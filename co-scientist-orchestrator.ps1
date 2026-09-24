@@ -32,7 +32,7 @@ param(
     [string]$StrixPath = "",           # run-strix: custom path (when StrixTarget=custom)
     [ValidateSet("quick", "standard", "deep")]
     [string]$StrixMode = "deep",       # run-strix: scan depth
-    [string]$StrixModel = "anthropic/claude-sonnet-4-6",  # run-strix: LLM model
+    [string]$StrixModel = "anthropic/claude-sonnet-5",  # run-strix: LLM model
     [switch]$StrixHeadless,            # run-strix: non-interactive mode
 
     [switch]$DryRun
@@ -112,7 +112,7 @@ FLAGS
   -StrixTarget <target>  For run-strix: backend | frontend | custom (default: backend)
   -StrixPath <path>      For run-strix: custom target path (when StrixTarget=custom)
   -StrixMode <mode>      For run-strix: standard | quick (default: standard)
-  -StrixModel <model>    For run-strix: LLM model (default: anthropic/claude-sonnet-4-6)
+  -StrixModel <model>    For run-strix: LLM model (default: anthropic/claude-sonnet-5)
   -StrixHeadless         For run-strix: non-interactive headless mode
   -DryRun                Print commands without executing
 

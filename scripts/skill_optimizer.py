@@ -175,7 +175,7 @@ def _call_claude(
     client: Any,
     system: str,
     user: str,
-    model: str = "claude-sonnet-4-6",
+    model: str = "claude-sonnet-5",
     max_tokens: int = 4096,
     retries: int = 3,
 ) -> str:
@@ -188,7 +188,11 @@ def _call_claude(
                 system=system,
                 messages=[{"role": "user", "content": user}],
             )
-            return resp.content[0].text
+            # Current models may return thinking blocks before the answer; take the text blocks.
+            text = "".join(b.text for b in resp.content if getattr(b, "type", None) == "text")
+            if not text:
+                raise RuntimeError(f"Claude returned no text block (stop_reason={resp.stop_reason})")
+            return text
         except Exception as exc:
             is_overload = "529" in str(exc) or "overloaded" in str(exc).lower()
             if is_overload and attempt < retries - 1:
@@ -344,7 +348,7 @@ def optimize_skill(
     max_rounds: int = DEFAULT_MAX_ROUNDS,
     target_pass_rate: float = DEFAULT_TARGET_PASS_RATE,
     plateau_patience: int = DEFAULT_PLATEAU_PATIENCE,
-    model: str = "claude-sonnet-4-6",
+    model: str = "claude-sonnet-5",
     verbose: bool = True,
 ) -> OptimizationResult:
     """
@@ -540,7 +544,7 @@ def main() -> None:
     parser.add_argument("--max-rounds", type=int, default=DEFAULT_MAX_ROUNDS)
     parser.add_argument("--target-pass-rate", type=float, default=DEFAULT_TARGET_PASS_RATE)
     parser.add_argument("--plateau-patience", type=int, default=DEFAULT_PLATEAU_PATIENCE)
-    parser.add_argument("--model", default="claude-sonnet-4-6")
+    parser.add_argument("--model", default="claude-sonnet-5")
     args = parser.parse_args()
 
     optimize_skill(
