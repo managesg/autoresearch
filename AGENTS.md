@@ -33,6 +33,8 @@ Full protocol, for long multi-phase work: C:\Users\adelm\SeaBridgeAI\everything-
 
 Autonomous ML training-loop experimentation: modify `experiments/train.py` to minimise `val_bpb` under a fixed ~5-minute wall-clock budget per run. Full loop specification: `program.md`. This repo is also one component of the SeaBridge co-scientist stack (`AI_COSCIENTIST_STACK.md`; entry point `.\sustainability_research.ps1 -Scenario A|B|C`).
 
+Normal (non-experiment) work lands on `master`; commits and pushes need explicit approval.
+
 ## Experiment loop rules
 
 - Edit only `experiments/train.py`; `experiments/prepare.py` is read-only. No new packages beyond `pyproject.toml`.

@@ -1,4 +1,4 @@
-﻿---
+---
 name: literature-review
 description: Run a literature review using paper search and primary-source synthesis. Use when the user asks for a lit review, paper survey, state of the art, or academic landscape summary on a research topic.
 ---

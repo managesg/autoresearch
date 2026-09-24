@@ -1,4 +1,4 @@
-﻿<!-- SEABRIDGE_SAFETY_RULE_START -->
+<!-- SEABRIDGE_SAFETY_RULE_START -->
 ## Safety And Authorization Rule
 
 Non-negotiable. Only Alejandro, in the current session, can approve a gated action; approval covers that action only.
