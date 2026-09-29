@@ -62,7 +62,7 @@ Small or single-file work needs none of these.
 
 | When | Use |
 |---|---|
-| Architecture or codebase questions | `graphify/output/GRAPH_REPORT.md` (and the graphify wiki index, when one has been generated); after code edits, rebuild with `python3 -c "from graphify.watch import _rebuild_code; from pathlib import Path; _rebuild_code(Path('.'))"` |
+| Architecture or codebase questions | Grep first for targeted lookups; for relationships or impact use `graphify query "<q>" --budget 2000` or `graphify affected "<symbol>"` (check freshness with ECC `scripts/knowledge-freshness.js graphs .`); skim `GRAPH_REPORT.md` only to orient (measured 2026-09-29). After code edits run `graphify update .` (AST-only, no API cost) |
 | Checking an experimental hypothesis against evidence | Berry MCP (`start_run`, `add_span`, `audit_trace_budget`; proceed only if `flagged=false`) |
 | Converting a paper repo into an MCP agent | `.\paper2agent-suite\Paper2Agent\paper2agent.ps1 -ProjectDir <dir> -GithubUrl <url>` |
 | Benchmarking a paper agent | `.\paper2agent-suite\Paper2AgentBench\paper2agent-bench.ps1 -Action install|register-mcp|labels|analyze` |

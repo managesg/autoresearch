@@ -35,7 +35,8 @@ feynman/node_modules/
 paper2agent-suite/**/outputs/
 paper2agent-suite/**/reports/
 strix/strix_runs/
-graphify/          # legacy PowerShell wrapper, not the new CLI
+# Legacy vendored graphify checkout, not the pipx CLI
+graphify/
 handoff/
 
 # ML model weights / large artifacts
@@ -45,3 +46,25 @@ handoff/
 *.ckpt
 *.onnx
 *.gguf
+
+# SeaBridgeAI knowledge boundary (2026-09-29, knowledge-ops): graphs hold code
+# structure only. No reports, run artifacts, logs, local data, vendored or
+# upstream code; reports and artifacts can quote customer data.
+docs/reports/
+reports/
+artifacts/
+logs/
+/data/
+**/site-packages/
+_upstream/
+references/
+vendor/
+third_party/
+*.env
+.env.*
+# Vendored third-party projects (upstream code, not SeaBridgeAI-owned).
+strix/
+paper2agent-suite/
+unsloth/
+feynman/
+terrabit/
